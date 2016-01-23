@@ -20,6 +20,7 @@ public class BRecipe {
 	private String color;// color of the destilled/finished potion
 	private int difficulty;// difficulty to brew the potion, how exact the instruction has to be followed
 	private int alcohol;// Alcohol in perfect potion
+	private boolean splashable;
 	private ArrayList<BEffect> effects = new ArrayList<BEffect>(); // Special Effects when drinking
 
 	public BRecipe(ConfigurationSection configSectionRecipes, String recipeId) {
@@ -90,6 +91,7 @@ public class BRecipe {
 		this.color = configSectionRecipes.getString(recipeId + ".color");
 		this.difficulty = configSectionRecipes.getInt(recipeId + ".difficulty");
 		this.alcohol = configSectionRecipes.getInt(recipeId + ".alcohol");
+		this.splashable = configSectionRecipes.getBoolean(recipeId + ".splashable", false);
 
 		List<String> effectStringList = configSectionRecipes.getStringList(recipeId + ".effects");
 		if (effectStringList != null) {
@@ -145,6 +147,10 @@ public class BRecipe {
 
 	public boolean needsToAge() {
 		return age != 0;
+	}
+
+	public boolean isSplashable() {
+		return splashable;
 	}
 
 	// true if given list misses an ingredient
