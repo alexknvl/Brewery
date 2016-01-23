@@ -187,7 +187,7 @@ public class PlayerListener implements Listener {
 				if (brew != null) {
 					for (LivingEntity entity: event.getAffectedEntities()) {
 						if (entity instanceof Player) {
-							BPlayer.drink(brew, (Player) entity);
+							BPlayer.drink(brew, (Player) entity, event.getIntensity(entity));
 						}
 					}
 				}

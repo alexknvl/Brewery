@@ -81,8 +81,8 @@ public class BEffect {
 		}
 	}
 
-	public void apply(int quality, Player player) {
-		int duration = calcDuration(quality);
+	public void apply(int quality, Player player, double intensity) {
+		int duration = (int) (calcDuration(quality) * intensity);
 		int lvl = calcLvl(quality);
 
 		if (lvl < 1 || (duration < 1 && !type.isInstant())) {
