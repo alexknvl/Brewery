@@ -1,5 +1,6 @@
 package com.dre.brewery.listeners;
 
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.*;
 import org.bukkit.event.EventHandler;
@@ -171,6 +172,24 @@ public class PlayerListener implements Listener {
 				BPlayer bplayer = BPlayer.get(player);
 				if (bplayer != null) {
 					bplayer.drainByItem(player, item.getType());
+				}
+			}
+		}
+	}
+
+	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+	public void onSplash(org.bukkit.event.entity.PotionSplashEvent event) {
+		ItemStack item = event.getPotion().getItem();
+
+		if (item != null) {
+			if (item.getType() == Material.POTION && item.hasItemMeta()) {
+				Brew brew = Brew.get(item);
+				if (brew != null) {
+					for (LivingEntity entity: event.getAffectedEntities()) {
+						if (entity instanceof Player) {
+							BPlayer.drink(brew, (Player) entity);
+						}
+					}
 				}
 			}
 		}

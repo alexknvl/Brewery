@@ -239,6 +239,10 @@ public class Brew {
 		return quality;
 	}
 
+	public boolean isSplashable() {
+		return currentRecipe.isSplashable();
+	}
+
 	public boolean canDistill() {
 		if (currentRecipe != null) {
 			return currentRecipe.getDistillRuns() > distillRuns;
@@ -658,19 +662,20 @@ public class Brew {
 		DARK_RED(12),
 		BRIGHT_GREY(14);
 
-		private final int colorId;
+		private final short colorId;
 
 		private PotionColor(int colorId) {
-			this.colorId = colorId;
+			this.colorId = (short) colorId;
 		}
 
 		// gets the Damage Value, that sets a color on the potion
 		// offset +32 is not accepted by brewer, so not further destillable
 		public short getColorId(boolean destillable) {
-			if (destillable) {
-				return (short) (colorId + 64);
-			}
-			return (short) (colorId + 32);
+//			if (destillable) {
+//				return (short) (colorId + 64);
+//			}
+			//return (short) (colorId + 32);
+			return (short) (colorId + 8192);
 		}
 	}
 
