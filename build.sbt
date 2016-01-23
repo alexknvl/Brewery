@@ -4,6 +4,8 @@ organization := "com.dre"
 
 version := "1.3.2"
 
+javacOptions ++= Seq("-Xlint:deprecation")
+
 libraryDependencies ++= Seq(
   "org.bukkit" % "bukkit" % "1.8.8-R0.1-SNAPSHOT",
   "org.spigotmc" % "spigot-api" % "1.8.8-R0.1-SNAPSHOT",
