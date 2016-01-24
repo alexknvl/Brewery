@@ -42,6 +42,7 @@ public class BreweryPlugin extends JavaPlugin {
 	public static boolean debug;
 	public static boolean useUUID;
 	public static boolean updateCheck;
+	public static Boolean doSigns;
 
 	// Third Party Enabled
 	public boolean useWG; //WorldGuard
@@ -280,7 +281,7 @@ public class BreweryPlugin extends JavaPlugin {
 		PlayerListener.openEverywhere = config.getBoolean("openLargeBarrelEverywhere", false);
 		DrunkTextEffect.log = config.getBoolean("logRealChat", false);
 		DrunkTextEffect.commands = config.getStringList("distortCommands");
-		DrunkTextEffect.doSigns = config.getBoolean("distortSignText", false);
+		doSigns = config.getBoolean("distortSignText", false);
 		for (String bypass : config.getStringList("distortBypass")) {
 			DrunkTextEffect.ignoreText.add(bypass.split(","));
 		}

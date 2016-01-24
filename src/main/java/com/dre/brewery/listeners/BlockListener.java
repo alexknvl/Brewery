@@ -36,7 +36,7 @@ public class BlockListener implements Listener {
 
 	@EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
 	public void onSignChangeLow(SignChangeEvent event) {
-		if (DrunkTextEffect.doSigns) {
+		if (BreweryPlugin.doSigns) {
 			BPlayer bPlayer = BPlayer.get(event.getPlayer());
 			if (bPlayer != null) {
 				int index = 0;
