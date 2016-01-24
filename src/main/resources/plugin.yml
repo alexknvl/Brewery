@@ -1,6 +1,6 @@
 name: Brewery
 version: 1.3.2
-main: com.dre.brewery.P
+main: com.dre.brewery.BreweryPlugin
 authors: [Milan Albrecht, Frank Baumann]
 softdepend: [LWC, LogBlock, WorldGuard, GriefPrevention, Vault]
 commands:

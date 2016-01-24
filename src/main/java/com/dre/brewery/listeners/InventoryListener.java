@@ -1,5 +1,6 @@
 package com.dre.brewery.listeners;
 
+import com.dre.brewery.BreweryPlugin;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -15,7 +16,6 @@ import org.bukkit.Material;
 
 import com.dre.brewery.Barrel;
 import com.dre.brewery.Brew;
-import com.dre.brewery.P;
 import com.dre.brewery.integration.LogBlockBarrel;
 
 public class InventoryListener implements Listener {
@@ -132,13 +132,13 @@ public class InventoryListener implements Listener {
 
 	@EventHandler
 	public void onInventoryClose(InventoryCloseEvent event) {
-		if (P.p.useLB) {
+		if (BreweryPlugin.instance.useLB) {
 			if (event.getInventory().getHolder() instanceof Barrel) {
 				try {
 					LogBlockBarrel.closeBarrel(event.getPlayer(), event.getInventory());
 				} catch (Exception e) {
-					P.p.errorLog("Failed to Log Barrel to LogBlock!");
-					P.p.errorLog("Brewery was tested with version 1.80 of LogBlock!");
+					BreweryPlugin.instance.errorLog("Failed to Log Barrel to LogBlock!");
+					BreweryPlugin.instance.errorLog("Brewery was tested with version 1.80 of LogBlock!");
 					e.printStackTrace();
 				}
 			}

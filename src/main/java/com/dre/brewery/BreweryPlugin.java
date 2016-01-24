@@ -36,8 +36,8 @@ import com.dre.brewery.listeners.*;
 import com.dre.brewery.filedata.*;
 import com.dre.brewery.integration.LogBlockBarrel;
 
-public class P extends JavaPlugin {
-	public static P p;
+public class BreweryPlugin extends JavaPlugin {
+	public static BreweryPlugin instance;
 	public static String configVersion = "1.3.1";
 	public static boolean debug;
 	public static boolean useUUID;
@@ -64,7 +64,7 @@ public class P extends JavaPlugin {
 
 	@Override
 	public void onEnable() {
-		p = this;
+		instance = this;
 
 		// Version check
 		String v = Bukkit.getBukkitVersion();
@@ -73,13 +73,13 @@ public class P extends JavaPlugin {
 		// load the Config
 		try {
 			if (!readConfig()) {
-				p = null;
+				instance = null;
 				getServer().getPluginManager().disablePlugin(this);
 				return;
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			p = null;
+			instance = null;
 			getServer().getPluginManager().disablePlugin(this);
 			return;
 		}
@@ -96,18 +96,18 @@ public class P extends JavaPlugin {
 		worldListener = new WorldListener();
 		getCommand("Brewery").setExecutor(new CommandListener());
 
-		p.getServer().getPluginManager().registerEvents(blockListener, p);
-		p.getServer().getPluginManager().registerEvents(playerListener, p);
-		p.getServer().getPluginManager().registerEvents(entityListener, p);
-		p.getServer().getPluginManager().registerEvents(inventoryListener, p);
-		p.getServer().getPluginManager().registerEvents(worldListener, p);
+		instance.getServer().getPluginManager().registerEvents(blockListener, instance);
+		instance.getServer().getPluginManager().registerEvents(playerListener, instance);
+		instance.getServer().getPluginManager().registerEvents(entityListener, instance);
+		instance.getServer().getPluginManager().registerEvents(inventoryListener, instance);
+		instance.getServer().getPluginManager().registerEvents(worldListener, instance);
 
 		// Heartbeat
-		p.getServer().getScheduler().runTaskTimer(p, new BreweryRunnable(), 650, 1200);
-		p.getServer().getScheduler().runTaskTimer(p, new DrunkRunnable(), 120, 120);
+		instance.getServer().getScheduler().runTaskTimer(instance, new BreweryRunnable(), 650, 1200);
+		instance.getServer().getScheduler().runTaskTimer(instance, new DrunkRunnable(), 120, 120);
 
 		if (updateCheck) {
-			p.getServer().getScheduler().runTaskLaterAsynchronously(p, new UpdateChecker(), 135);
+			instance.getServer().getScheduler().runTaskLaterAsynchronously(instance, new UpdateChecker(), 135);
 		}
 
 		this.log(this.getDescription().getName() + " enabled!");
@@ -122,7 +122,7 @@ public class P extends JavaPlugin {
 		// Stop shedulers
 		getServer().getScheduler().cancelTasks(this);
 
-		if (p == null) {
+		if (instance == null) {
 			return;
 		}
 
@@ -171,20 +171,20 @@ public class P extends JavaPlugin {
 		// load the Config
 		try {
 			if (!readConfig()) {
-				p = null;
+				instance = null;
 				getServer().getPluginManager().disablePlugin(this);
 				return;
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			p = null;
+			instance = null;
 			getServer().getPluginManager().disablePlugin(this);
 			return;
 		}
 
 		// save and load LanguageReader
 		languageReader.save();
-		languageReader = new LanguageReader(new File(p.getDataFolder(), "languages/" + language + ".yml"));
+		languageReader = new LanguageReader(new File(instance.getDataFolder(), "languages/" + language + ".yml"));
 
 		// Reload Recipes
 		Boolean successful = true;
@@ -194,7 +194,7 @@ public class P extends JavaPlugin {
 			}
 		}
 		if (!successful) {
-			msg(sender, p.languageReader.get("Error_Recipeload"));
+			msg(sender, instance.languageReader.get("Error_Recipeload"));
 		}
 	}
 
@@ -217,7 +217,7 @@ public class P extends JavaPlugin {
 	}
 
 	public boolean readConfig() {
-		File file = new File(p.getDataFolder(), "config.yml");
+		File file = new File(instance.getDataFolder(), "config.yml");
 		if (!checkConfigs()) {
 			return false;
 		}
@@ -227,14 +227,14 @@ public class P extends JavaPlugin {
 		language = config.getString("language", "en");
 
 		// Load LanguageReader
-		languageReader = new LanguageReader(new File(p.getDataFolder(), "languages/" + language + ".yml"));
+		languageReader = new LanguageReader(new File(instance.getDataFolder(), "languages/" + language + ".yml"));
 
 		// Check if config is the newest version
 		String version = config.getString("version", null);
 		if (version != null) {
 			if (!version.equals(configVersion)) {
 				new ConfigUpdater(file).update(version, language);
-				P.p.log("Config Updated to version: " + configVersion);
+				BreweryPlugin.instance.log("Config Updated to version: " + configVersion);
 				config = YamlConfiguration.loadConfiguration(file);
 			}
 		}
@@ -254,9 +254,9 @@ public class P extends JavaPlugin {
 				}
 			} catch (Throwable e) {
 				wg = null;
-				P.p.errorLog("Failed loading WorldGuard Integration! Opening Barrels will NOT work!");
-				P.p.errorLog("Brewery was tested with version 5.8 to 6.0 of WorldGuard!");
-				P.p.errorLog("Disable the WorldGuard support in the config and do /brew reload");
+				BreweryPlugin.instance.errorLog("Failed loading WorldGuard Integration! Opening Barrels will NOT work!");
+				BreweryPlugin.instance.errorLog("Brewery was tested with version 5.8 to 6.0 of WorldGuard!");
+				BreweryPlugin.instance.errorLog("Disable the WorldGuard support in the config and do /brew reload");
 				e.printStackTrace();
 			}
 		}
@@ -310,7 +310,7 @@ public class P extends JavaPlugin {
 							mat = vaultItem.getType();
 						}
 					} catch (Exception e) {
-						P.p.errorLog("Could not check vault for Item Name");
+						BreweryPlugin.instance.errorLog("Could not check vault for Item Name");
 						e.printStackTrace();
 					}
 				}
@@ -330,7 +330,7 @@ public class P extends JavaPlugin {
 				String[] drainSplit = drainString.split("/");
 				if (drainSplit.length > 1) {
 					Material mat = Material.matchMaterial(drainSplit[0]);
-					int strength = p.parseInt(drainSplit[1]);
+					int strength = instance.parseInt(drainSplit[1]);
 					if (mat == null && hasVault && strength > 0) {
 						try {
 							net.milkbowl.vault.item.ItemInfo vaultItem = net.milkbowl.vault.item.Items.itemByString(drainSplit[0]);
@@ -338,7 +338,7 @@ public class P extends JavaPlugin {
 								mat = vaultItem.getType();
 							}
 						} catch (Exception e) {
-							P.p.errorLog("Could not check vault for Item Name");
+							BreweryPlugin.instance.errorLog("Could not check vault for Item Name");
 							e.printStackTrace();
 						}
 					}
@@ -357,7 +357,7 @@ public class P extends JavaPlugin {
 
 	// load all Data
 	public void readData() {
-		File file = new File(p.getDataFolder(), "data.yml");
+		File file = new File(instance.getDataFolder(), "data.yml");
 		if (file.exists()) {
 
 			FileConfiguration data = YamlConfiguration.loadConfiguration(file);
@@ -366,10 +366,10 @@ public class P extends JavaPlugin {
 			String version = data.getString("Version", null);
 			if (version != null) {
 				if (!version.equals(DataSave.dataVersion)) {
-					P.p.log("Data File is being updated...");
+					BreweryPlugin.instance.log("Data File is being updated...");
 					new DataUpdater(data, file).update(version);
 					data = YamlConfiguration.loadConfiguration(file);
-					P.p.log("Data Updated to version: " + DataSave.dataVersion);
+					BreweryPlugin.instance.log("Data Updated to version: " + DataSave.dataVersion);
 				}
 			}
 
@@ -433,7 +433,7 @@ public class P extends JavaPlugin {
 				}
 			}
 
-			for (World world : p.getServer().getWorlds()) {
+			for (World world : instance.getServer().getWorlds()) {
 				if (world.getName().startsWith("DXL_")) {
 					loadWorldData(getDxlName(world.getName()), world);
 				} else {
@@ -452,7 +452,7 @@ public class P extends JavaPlugin {
 			String[] matSplit = mat.split(",");
 			ItemStack item = new ItemStack(Material.getMaterial(matSplit[0]), matSection.getInt(mat));
 			if (matSplit.length == 2) {
-				item.setDurability((short) P.p.parseInt(matSplit[1]));
+				item.setDurability((short) BreweryPlugin.instance.parseInt(matSplit[1]));
 			}
 			ingredients.add(item);
 		}
@@ -483,7 +483,7 @@ public class P extends JavaPlugin {
 	// load Block locations of given world
 	public void loadWorldData(String uuid, World world) {
 
-		File file = new File(p.getDataFolder(), "data.yml");
+		File file = new File(instance.getDataFolder(), "data.yml");
 		if (file.exists()) {
 
 			FileConfiguration data = YamlConfiguration.loadConfiguration(file);
@@ -576,7 +576,7 @@ public class P extends JavaPlugin {
 	}
 
 	private boolean checkConfigs() {
-		File cfg = new File(p.getDataFolder(), "config.yml");
+		File cfg = new File(instance.getDataFolder(), "config.yml");
 		if (!cfg.exists()) {
 			errorLog("No config.yml found, creating default file! You may want to choose a config according to your language!");
 			InputStream defconf = getResource("config/en/config.yml");
@@ -646,7 +646,7 @@ public class P extends JavaPlugin {
 
 	// create empty World save Sections
 	public void createWorldSections(ConfigurationSection section) {
-		for (World world : p.getServer().getWorlds()) {
+		for (World world : instance.getServer().getWorlds()) {
 			String worldName = world.getName();
 			if (worldName.startsWith("DXL_")) {
 				worldName = getDxlName(worldName);

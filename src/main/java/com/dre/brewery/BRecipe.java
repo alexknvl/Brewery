@@ -54,9 +54,9 @@ public class BRecipe {
 					Material mat = Material.matchMaterial(matParts[0]);
 					short durability = -1;
 					if (matParts.length == 2) {
-						durability = (short) P.p.parseInt(matParts[1]);
+						durability = (short) BreweryPlugin.instance.parseInt(matParts[1]);
 					}
-					if (mat == null && P.p.hasVault) {
+					if (mat == null && BreweryPlugin.instance.hasVault) {
 						try {
 							net.milkbowl.vault.item.ItemInfo vaultItem = net.milkbowl.vault.item.Items.itemByString(matParts[0]);
 							if (vaultItem != null) {
@@ -66,16 +66,16 @@ public class BRecipe {
 								}
 							}
 						} catch (Exception e) {
-							P.p.errorLog("Could not check vault for Item Name");
+							BreweryPlugin.instance.errorLog("Could not check vault for Item Name");
 							e.printStackTrace();
 						}
 					}
 					if (mat != null) {
-						ItemStack stack = new ItemStack(mat, P.p.parseInt(ingredParts[1]), durability);
+						ItemStack stack = new ItemStack(mat, BreweryPlugin.instance.parseInt(ingredParts[1]), durability);
 						this.ingredients.add(stack);
 						BIngredients.possibleIngredients.add(mat);
 					} else {
-						P.p.errorLog("Unknown Material: " + ingredParts[0]);
+						BreweryPlugin.instance.errorLog("Unknown Material: " + ingredParts[0]);
 						this.ingredients = null;
 						return;
 					}
@@ -100,7 +100,7 @@ public class BRecipe {
 				if (effect.isValid()) {
 					effects.add(effect);
 				} else {
-					P.p.errorLog("Error adding Effect to Recipe: " + getName(5));
+					BreweryPlugin.instance.errorLog("Error adding Effect to Recipe: " + getName(5));
 				}
 			}
 		}
@@ -212,7 +212,7 @@ public class BRecipe {
 		Brew brew = new Brew(uid, bIngredients, quality, distillruns, getAge(), wood, getName(5), false, false, true);
 
 		potion.setDurability(Brew.PotionColor.valueOf(getColor()).getColorId(false));
-		potionMeta.setDisplayName(P.p.color("&f" + getName(quality)));
+		potionMeta.setDisplayName(BreweryPlugin.instance.color("&f" + getName(quality)));
 		// This effect stores the UID in its Duration
 		potionMeta.addCustomEffect((PotionEffectType.REGENERATION).createEffect((uid * 4), 0), true);
 

@@ -50,14 +50,14 @@ public class Barrel implements InventoryHolder {
 		this.spigot = spigot;
 		this.signoffset = sign;
 		if (isLarge()) {
-			this.inventory = org.bukkit.Bukkit.createInventory(this, 27, P.p.languageReader.get("Etc_Barrel"));
+			this.inventory = org.bukkit.Bukkit.createInventory(this, 27, BreweryPlugin.instance.languageReader.get("Etc_Barrel"));
 		} else {
-			this.inventory = org.bukkit.Bukkit.createInventory(this, 9, P.p.languageReader.get("Etc_Barrel"));
+			this.inventory = org.bukkit.Bukkit.createInventory(this, 9, BreweryPlugin.instance.languageReader.get("Etc_Barrel"));
 		}
 		if (items != null) {
 			for (String slot : items.keySet()) {
 				if (items.get(slot) instanceof ItemStack) {
-					this.inventory.setItem(P.p.parseInt(slot), (ItemStack) items.get(slot));
+					this.inventory.setItem(BreweryPlugin.instance.parseInt(slot), (ItemStack) items.get(slot));
 				}
 			}
 		}
@@ -67,7 +67,7 @@ public class Barrel implements InventoryHolder {
 		if (wo.length > 1) {
 			woodsloc = new int[wo.length];
 			for (String wos : wo) {
-				woodsloc[i] = P.p.parseInt(wos);
+				woodsloc[i] = BreweryPlugin.instance.parseInt(wos);
 				i++;
 			}
 			i = 0;
@@ -75,7 +75,7 @@ public class Barrel implements InventoryHolder {
 		if (st.length > 1) {
 			stairsloc = new int[st.length];
 			for (String sts : st) {
-				stairsloc[i] = P.p.parseInt(sts);
+				stairsloc[i] = BreweryPlugin.instance.parseInt(sts);
 				i++;
 			}
 		}
@@ -103,60 +103,60 @@ public class Barrel implements InventoryHolder {
 				// We want to check at least one barrel every time
 				random.checked = false;
 			}
-			new BarrelCheck().runTaskTimer(P.p, 1, 1);
+			new BarrelCheck().runTaskTimer(BreweryPlugin.instance, 1, 1);
 		}
 	}
 
 	public boolean hasPermsOpen(Player player, PlayerInteractEvent event) {
 		if (isLarge()) {
 			if (!player.hasPermission("brewery.openbarrel.big")) {
-				P.p.msg(player, P.p.languageReader.get("Error_NoBarrelAccess"));
+				BreweryPlugin.instance.msg(player, BreweryPlugin.instance.languageReader.get("Error_NoBarrelAccess"));
 				return false;
 			}
 		} else {
 			if (!player.hasPermission("brewery.openbarrel.small")) {
-				P.p.msg(player, P.p.languageReader.get("Error_NoBarrelAccess"));
+				BreweryPlugin.instance.msg(player, BreweryPlugin.instance.languageReader.get("Error_NoBarrelAccess"));
 				return false;
 			}
 		}
 
-		if (P.p.useWG) {
-			Plugin plugin = P.p.getServer().getPluginManager().getPlugin("WorldGuard");
+		if (BreweryPlugin.instance.useWG) {
+			Plugin plugin = BreweryPlugin.instance.getServer().getPluginManager().getPlugin("WorldGuard");
 			if (plugin != null) {
 				try {
-					if (!P.p.wg.checkAccess(player, spigot, plugin)) {
+					if (!BreweryPlugin.instance.wg.checkAccess(player, spigot, plugin)) {
 						return false;
 					}
 				} catch (Throwable e) {
-					P.p.errorLog("Failed to Check WorldGuard for Barrel Open Permissions!");
-					P.p.errorLog("Brewery was tested with version 5.8 to 6.0 of WorldGuard!");
-					P.p.errorLog("Disable the WorldGuard support in the config and do /brew reload");
+					BreweryPlugin.instance.errorLog("Failed to Check WorldGuard for Barrel Open Permissions!");
+					BreweryPlugin.instance.errorLog("Brewery was tested with version 5.8 to 6.0 of WorldGuard!");
+					BreweryPlugin.instance.errorLog("Disable the WorldGuard support in the config and do /brew reload");
 					e.printStackTrace();
-					P.p.msg(player, "&cError opening Barrel, please report to an Admin!");
+					BreweryPlugin.instance.msg(player, "&cError opening Barrel, please report to an Admin!");
 					return false;
 				}
 			}
 		}
 
-		if (P.p.useGP) {
-			if (P.p.getServer().getPluginManager().isPluginEnabled("GriefPrevention")) {
+		if (BreweryPlugin.instance.useGP) {
+			if (BreweryPlugin.instance.getServer().getPluginManager().isPluginEnabled("GriefPrevention")) {
 				try {
 					if (!GriefPreventionBarrel.checkAccess(player, spigot)) {
 						return false;
 					}
 				} catch (Throwable e) {
-					P.p.errorLog("Failed to Check GriefPrevention for Barrel Open Permissions!");
-					P.p.errorLog("Brewery only works with the latest release of GriefPrevention (7.8)");
-					P.p.errorLog("Disable the GriefPrevention support in the config and do /brew reload");
+					BreweryPlugin.instance.errorLog("Failed to Check GriefPrevention for Barrel Open Permissions!");
+					BreweryPlugin.instance.errorLog("Brewery only works with the latest release of GriefPrevention (7.8)");
+					BreweryPlugin.instance.errorLog("Disable the GriefPrevention support in the config and do /brew reload");
 					e.printStackTrace();
-					P.p.msg(player, "&cError opening Barrel, please report to an Admin!");
+					BreweryPlugin.instance.msg(player, "&cError opening Barrel, please report to an Admin!");
 					return false;
 				}
 			}
 		}
 
-		if (event != null && P.p.useLWC) {
-			Plugin plugin = P.p.getServer().getPluginManager().getPlugin("LWC");
+		if (event != null && BreweryPlugin.instance.useLWC) {
+			Plugin plugin = BreweryPlugin.instance.getServer().getPluginManager().getPlugin("LWC");
 			if (plugin != null) {
 
 				// If the Clicked Block was the Sign, LWC already knows and we dont need to do anything here
@@ -167,11 +167,11 @@ public class Barrel implements InventoryHolder {
 						try {
 							return LWCBarrel.checkAccess(player, sign, event, plugin);
 						} catch (Throwable e) {
-							P.p.errorLog("Failed to Check LWC for Barrel Open Permissions!");
-							P.p.errorLog("Brewery was tested with version 4.3.1 of LWC!");
-							P.p.errorLog("Disable the LWC support in the config and do /brew reload");
+							BreweryPlugin.instance.errorLog("Failed to Check LWC for Barrel Open Permissions!");
+							BreweryPlugin.instance.errorLog("Brewery was tested with version 4.3.1 of LWC!");
+							BreweryPlugin.instance.errorLog("Disable the LWC support in the config and do /brew reload");
 							e.printStackTrace();
-							P.p.msg(player, "&cError opening Barrel, please report to an Admin!");
+							BreweryPlugin.instance.msg(player, "&cError opening Barrel, please report to an Admin!");
 							return false;
 						}
 					}
@@ -188,15 +188,15 @@ public class Barrel implements InventoryHolder {
 			willDestroy();
 			return true;
 		}
-		if (P.p.useLWC) {
+		if (BreweryPlugin.instance.useLWC) {
 			try {
 				return LWCBarrel.checkDestroy(player, this);
 			} catch (Throwable e) {
-				P.p.errorLog("Failed to Check LWC for Barrel Break Permissions!");
-				P.p.errorLog("Brewery was tested with version 4.3.1 of LWC!");
-				P.p.errorLog("Disable the LWC support in the config and do /brew reload");
+				BreweryPlugin.instance.errorLog("Failed to Check LWC for Barrel Break Permissions!");
+				BreweryPlugin.instance.errorLog("Brewery was tested with version 4.3.1 of LWC!");
+				BreweryPlugin.instance.errorLog("Disable the LWC support in the config and do /brew reload");
 				e.printStackTrace();
-				P.p.msg(player, "&cError breaking Barrel, please report to an Admin!");
+				BreweryPlugin.instance.msg(player, "&cError breaking Barrel, please report to an Admin!");
 				return false;
 			}
 		}
@@ -206,12 +206,12 @@ public class Barrel implements InventoryHolder {
 
 	// If something other than the Player is destroying the barrel, inform protection plugins
 	public void willDestroy() {
-		if (P.p.useLWC) {
+		if (BreweryPlugin.instance.useLWC) {
 			try {
 				LWCBarrel.remove(this);
 			} catch (Throwable e) {
-				P.p.errorLog("Failed to Remove LWC Lock from Barrel!");
-				P.p.errorLog("Brewery was tested with version 4.3.1 of LWC!");
+				BreweryPlugin.instance.errorLog("Failed to Remove LWC Lock from Barrel!");
+				BreweryPlugin.instance.errorLog("Brewery was tested with version 4.3.1 of LWC!");
 				e.printStackTrace();
 			}
 		}
@@ -221,9 +221,9 @@ public class Barrel implements InventoryHolder {
 	public void open(Player player) {
 		if (inventory == null) {
 			if (isLarge()) {
-				inventory = org.bukkit.Bukkit.createInventory(this, 27, P.p.languageReader.get("Etc_Barrel"));
+				inventory = org.bukkit.Bukkit.createInventory(this, 27, BreweryPlugin.instance.languageReader.get("Etc_Barrel"));
 			} else {
-				inventory = org.bukkit.Bukkit.createInventory(this, 9, P.p.languageReader.get("Etc_Barrel"));
+				inventory = org.bukkit.Bukkit.createInventory(this, 9, BreweryPlugin.instance.languageReader.get("Etc_Barrel"));
 			}
 		} else {
 			if (time > 0) {
@@ -243,7 +243,7 @@ public class Barrel implements InventoryHolder {
 						}
 						loadTime = System.nanoTime() - loadTime;
 						float ftime = (float) (loadTime / 1000000.0);
-						P.p.debugLog("opening Barrel with potions (" + ftime + "ms)");
+						BreweryPlugin.instance.debugLog("opening Barrel with potions (" + ftime + "ms)");
 					}
 				}
 			}
@@ -251,12 +251,12 @@ public class Barrel implements InventoryHolder {
 		// reset barreltime, potions have new age
 		time = 0;
 
-		if (P.p.useLB) {
+		if (BreweryPlugin.instance.useLB) {
 			try {
 				LogBlockBarrel.openBarrel(player, inventory, spigot.getLocation());
 			} catch (Throwable e) {
-				P.p.errorLog("Failed to Log Barrel to LogBlock!");
-				P.p.errorLog("Brewery was tested with version 1.80 of LogBlock!");
+				BreweryPlugin.instance.errorLog("Failed to Log Barrel to LogBlock!");
+				BreweryPlugin.instance.errorLog("Brewery was tested with version 1.80 of LogBlock!");
 				e.printStackTrace();
 			}
 		}
@@ -428,12 +428,12 @@ public class Barrel implements InventoryHolder {
 			if (barrel.getBrokenBlock(true) == null) {
 				if (isSign(spigot)) {
 					if (!player.hasPermission("brewery.createbarrel.small")) {
-						P.p.msg(player, P.p.languageReader.get("Perms_NoSmallBarrelCreate"));
+						BreweryPlugin.instance.msg(player, BreweryPlugin.instance.languageReader.get("Perms_NoSmallBarrelCreate"));
 						return false;
 					}
 				} else {
 					if (!player.hasPermission("brewery.createbarrel.big")) {
-						P.p.msg(player, P.p.languageReader.get("Perms_NoBigBarrelCreate"));
+						BreweryPlugin.instance.msg(player, BreweryPlugin.instance.languageReader.get("Perms_NoBigBarrelCreate"));
 						return false;
 					}
 				}
@@ -456,12 +456,12 @@ public class Barrel implements InventoryHolder {
 				human.closeInventory();
 			}
 			ItemStack[] items = inventory.getContents();
-			if (P.p.useLB && breaker != null) {
+			if (BreweryPlugin.instance.useLB && breaker != null) {
 				try {
 					LogBlockBarrel.breakBarrel(breaker.getName(), items, spigot.getLocation());
 				} catch (Throwable e) {
-					P.p.errorLog("Failed to Log Barrel-break to LogBlock!");
-					P.p.errorLog("Brewery was tested with version 1.80 of LogBlock!");
+					BreweryPlugin.instance.errorLog("Failed to Log Barrel-break to LogBlock!");
+					BreweryPlugin.instance.errorLog("Brewery was tested with version 1.80 of LogBlock!");
 					e.printStackTrace();
 				}
 			}
@@ -506,7 +506,7 @@ public class Barrel implements InventoryHolder {
 
 	// Saves all data
 	public static void save(ConfigurationSection config, ConfigurationSection oldData) {
-		P.p.createWorldSections(config);
+		BreweryPlugin.instance.createWorldSections(config);
 
 		if (!barrels.isEmpty()) {
 			int id = 0;
@@ -516,7 +516,7 @@ public class Barrel implements InventoryHolder {
 				String prefix;
 
 				if (worldName.startsWith("DXL_")) {
-					prefix = P.p.getDxlName(worldName) + "." + id;
+					prefix = BreweryPlugin.instance.getDxlName(worldName) + "." + id;
 				} else {
 					prefix = barrel.spigot.getWorld().getUID().toString() + "." + id;
 				}
@@ -932,7 +932,7 @@ public class Barrel implements InventoryHolder {
 					if (!barrel.checked) {
 						Block broken = barrel.getBrokenBlock(false);
 						if (broken != null) {
-							P.p.debugLog("Barrel at " + broken.getWorld().getName() + "/" + broken.getX() + "/" + broken.getY() + "/" + broken.getZ()
+							BreweryPlugin.instance.debugLog("Barrel at " + broken.getWorld().getName() + "/" + broken.getX() + "/" + broken.getY() + "/" + broken.getZ()
 									+ " has been destroyed unexpectedly, contents will drop");
 							// remove the barrel if it was destroyed
 							barrel.willDestroy();

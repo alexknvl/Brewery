@@ -79,7 +79,7 @@ public class BIngredients {
 		if (cookRecipe != null) {
 			// Potion is best with cooking only
 			int quality = (int) Math.round((getIngredientQuality(cookRecipe) + getCookingQuality(cookRecipe, false)) / 2.0);
-			P.p.debugLog("cooked potion has Quality: " + quality);
+			BreweryPlugin.instance.debugLog("cooked potion has Quality: " + quality);
 			Brew brew = new Brew(uid, quality, cookRecipe, this);
 			Brew.addOrReplaceEffects(potionMeta, brew.getEffects(), brew.getQuality());
 
@@ -91,7 +91,7 @@ public class BIngredients {
 			new Brew(uid, this);
 
 			if (state <= 1) {
-				cookedName = P.p.languageReader.get("Brew_ThickBrew");
+				cookedName = BreweryPlugin.instance.languageReader.get("Brew_ThickBrew");
 				potion.setDurability(Brew.PotionColor.BLUE.getColorId(false));
 			} else {
 				for (Material ingredient : materials.keySet()) {
@@ -107,11 +107,11 @@ public class BIngredients {
 		}
 		if (cookedName == null) {
 			// if no name could be found
-			cookedName = P.p.languageReader.get("Brew_Undefined");
+			cookedName = BreweryPlugin.instance.languageReader.get("Brew_Undefined");
 			potion.setDurability(Brew.PotionColor.CYAN.getColorId(true));
 		}
 
-		potionMeta.setDisplayName(P.p.color("&f" + cookedName));
+		potionMeta.setDisplayName(BreweryPlugin.instance.color("&f" + cookedName));
 		// This effect stores the UID in its Duration
 		potionMeta.addCustomEffect((PotionEffectType.REGENERATION).createEffect((uid * 4), 0), true);
 		potion.setItemMeta(potionMeta);
@@ -154,7 +154,7 @@ public class BIngredients {
 					// needs riping in barrel
 					ageQuality = getAgeQuality(recipe, time);
 					woodQuality = getWoodQuality(recipe, wood);
-					P.p.debugLog("Ingredient Quality: " + ingredientQuality + " Cooking Quality: " + cookingQuality +
+					BreweryPlugin.instance.debugLog("Ingredient Quality: " + ingredientQuality + " Cooking Quality: " + cookingQuality +
 						" Wood Quality: " + woodQuality + " age Quality: " + ageQuality + " for " + recipe.getName(5));
 
 					// is this recipe better than the previous best?
@@ -163,7 +163,7 @@ public class BIngredients {
 						bestRecipe = recipe;
 					}
 				} else {
-					P.p.debugLog("Ingredient Quality: " + ingredientQuality + " Cooking Quality: " + cookingQuality + " for " + recipe.getName(5));
+					BreweryPlugin.instance.debugLog("Ingredient Quality: " + ingredientQuality + " Cooking Quality: " + cookingQuality + " for " + recipe.getName(5));
 					// calculate quality without age and barrel
 					if ((((float) ingredientQuality + cookingQuality) / 2) > quality) {
 						quality = ((float) ingredientQuality + cookingQuality) / 2;
@@ -173,7 +173,7 @@ public class BIngredients {
 			}
 		}
 		if (bestRecipe != null) {
-			P.p.debugLog("best recipe: " + bestRecipe.getName(5) + " has Quality= " + quality);
+			BreweryPlugin.instance.debugLog("best recipe: " + bestRecipe.getName(5) + " has Quality= " + quality);
 		}
 		return bestRecipe;
 	}

@@ -11,14 +11,14 @@ import org.bukkit.inventory.ItemStack;
 
 import com.dre.brewery.BIngredients;
 import com.dre.brewery.BRecipe;
-import com.dre.brewery.P;
+import com.dre.brewery.BreweryPlugin;
 import com.dre.brewery.Wakeup;
 import com.dre.brewery.BPlayer;
 import com.dre.brewery.Brew;
 
 public class CommandListener implements CommandExecutor {
 
-	public P p = P.p;
+	public BreweryPlugin breweryPlugin = BreweryPlugin.instance;
 
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
@@ -35,10 +35,10 @@ public class CommandListener implements CommandExecutor {
 		} else if (cmd.equalsIgnoreCase("reload")) {
 
 			if (sender.hasPermission("brewery.cmd.reload")) {
-				p.reload(sender);
-				p.msg(sender, p.languageReader.get("CMD_Reload"));
+				breweryPlugin.reload(sender);
+				breweryPlugin.msg(sender, breweryPlugin.languageReader.get("CMD_Reload"));
 			} else {
-				p.msg(sender, p.languageReader.get("Error_NoPermissions"));
+				breweryPlugin.msg(sender, breweryPlugin.languageReader.get("Error_NoPermissions"));
 			}
 
 		} else if (cmd.equalsIgnoreCase("wakeup")) {
@@ -46,7 +46,7 @@ public class CommandListener implements CommandExecutor {
 			if (sender.hasPermission("brewery.cmd.wakeup")) {
 				cmdWakeup(sender, args);
 			} else {
-				p.msg(sender, p.languageReader.get("Error_NoPermissions"));
+				breweryPlugin.msg(sender, breweryPlugin.languageReader.get("Error_NoPermissions"));
 			}
 
 		} else if (cmd.equalsIgnoreCase("create")) {
@@ -54,7 +54,7 @@ public class CommandListener implements CommandExecutor {
 			if (sender.hasPermission("brewery.cmd.create")) {
 				cmdCreate(sender, args);
 			} else {
-				p.msg(sender, p.languageReader.get("Error_NoPermissions"));
+				breweryPlugin.msg(sender, breweryPlugin.languageReader.get("Error_NoPermissions"));
 			}
 
 		} else if (cmd.equalsIgnoreCase("info")) {
@@ -63,13 +63,13 @@ public class CommandListener implements CommandExecutor {
 				if (sender.hasPermission("brewery.cmd.infoOther")) {
 					cmdInfo(sender, args[1]);
 				} else {
-					p.msg(sender, p.languageReader.get("Error_NoPermissions"));
+					breweryPlugin.msg(sender, breweryPlugin.languageReader.get("Error_NoPermissions"));
 				}
 			} else {
 				if (sender.hasPermission("brewery.cmd.info")) {
 					cmdInfo(sender, null);
 				} else {
-					p.msg(sender, p.languageReader.get("Error_NoPermissions"));
+					breweryPlugin.msg(sender, breweryPlugin.languageReader.get("Error_NoPermissions"));
 				}
 			}
 
@@ -77,12 +77,12 @@ public class CommandListener implements CommandExecutor {
 
 			if (sender.hasPermission("brewery.cmd.copy")) {
 				if (args.length > 1) {
-					cmdCopy(sender, p.parseInt(args[1]));
+					cmdCopy(sender, breweryPlugin.parseInt(args[1]));
 				} else {
 					cmdCopy(sender, 1);
 				}
 			} else {
-				p.msg(sender, p.languageReader.get("Error_NoPermissions"));
+				breweryPlugin.msg(sender, breweryPlugin.languageReader.get("Error_NoPermissions"));
 			}
 
 		} else if (cmd.equalsIgnoreCase("delete") || cmd.equalsIgnoreCase("rm") || cmd.equalsIgnoreCase("remove")) {
@@ -90,7 +90,7 @@ public class CommandListener implements CommandExecutor {
 			if (sender.hasPermission("brewery.cmd.delete")) {
 				cmdDelete(sender);
 			} else {
-				p.msg(sender, p.languageReader.get("Error_NoPermissions"));
+				breweryPlugin.msg(sender, breweryPlugin.languageReader.get("Error_NoPermissions"));
 			}
 
 		} else if (cmd.equalsIgnoreCase("persist") || cmd.equalsIgnoreCase("persistent")) {
@@ -98,7 +98,7 @@ public class CommandListener implements CommandExecutor {
 			if (sender.hasPermission("brewery.cmd.persist")) {
 				cmdPersist(sender);
 			} else {
-				p.msg(sender, p.languageReader.get("Error_NoPermissions"));
+				breweryPlugin.msg(sender, breweryPlugin.languageReader.get("Error_NoPermissions"));
 			}
 
 		} else if (cmd.equalsIgnoreCase("static")) {
@@ -106,7 +106,7 @@ public class CommandListener implements CommandExecutor {
 			if (sender.hasPermission("brewery.cmd.static")) {
 				cmdStatic(sender);
 			} else {
-				p.msg(sender, p.languageReader.get("Error_NoPermissions"));
+				breweryPlugin.msg(sender, breweryPlugin.languageReader.get("Error_NoPermissions"));
 			}
 
 		} else if (cmd.equalsIgnoreCase("unlabel")) {
@@ -114,12 +114,12 @@ public class CommandListener implements CommandExecutor {
 			if (sender.hasPermission("brewery.cmd.unlabel")) {
 				cmdUnlabel(sender);
 			} else {
-				p.msg(sender, p.languageReader.get("Error_NoPermissions"));
+				breweryPlugin.msg(sender, breweryPlugin.languageReader.get("Error_NoPermissions"));
 			}
 
 		} else {
 
-			if (p.getServer().getPlayerExact(cmd) != null || BPlayer.hasPlayerbyName(cmd)) {
+			if (breweryPlugin.getServer().getPlayerExact(cmd) != null || BPlayer.hasPlayerbyName(cmd)) {
 
 				if (args.length == 1) {
 					if (sender.hasPermission("brewery.cmd.infoOther")) {
@@ -129,14 +129,14 @@ public class CommandListener implements CommandExecutor {
 					if (sender.hasPermission("brewery.cmd.player")) {
 						cmdPlayer(sender, args);
 					} else {
-						p.msg(sender, p.languageReader.get("Error_NoPermissions"));
+						breweryPlugin.msg(sender, breweryPlugin.languageReader.get("Error_NoPermissions"));
 					}
 				}
 
 			} else {
 
-				p.msg(sender, p.languageReader.get("Error_UnknownCommand"));
-				p.msg(sender, p.languageReader.get("Error_ShowHelp"));
+				breweryPlugin.msg(sender, breweryPlugin.languageReader.get("Error_UnknownCommand"));
+				breweryPlugin.msg(sender, breweryPlugin.languageReader.get("Error_ShowHelp"));
 
 			}
 		}
@@ -148,71 +148,71 @@ public class CommandListener implements CommandExecutor {
 
 		int page = 1;
 		if (args.length > 1) {
-			page = p.parseInt(args[1]);
+			page = breweryPlugin.parseInt(args[1]);
 		}
 
 		ArrayList<String> commands = getCommands(sender);
 
 		if (page == 1) {
-			p.msg(sender, "&6" + p.getDescription().getName() + " v" + p.getDescription().getVersion());	
+			breweryPlugin.msg(sender, "&6" + breweryPlugin.getDescription().getName() + " v" + breweryPlugin.getDescription().getVersion());
 		}
 
-		p.list(sender, commands, page);
+		breweryPlugin.list(sender, commands, page);
 
 	}
 
 	public ArrayList<String> getCommands(CommandSender sender) {
 
 		ArrayList<String> cmds = new ArrayList<String>();
-		cmds.add(p.languageReader.get("Help_Help"));
+		cmds.add(breweryPlugin.languageReader.get("Help_Help"));
 
 		if (sender.hasPermission("brewery.cmd.player")) {
-			cmds.add (p.languageReader.get("Help_Player"));
+			cmds.add (breweryPlugin.languageReader.get("Help_Player"));
 		}
 
 		if (sender.hasPermission("brewery.cmd.info")) {
-			cmds.add (p.languageReader.get("Help_Info"));
+			cmds.add (breweryPlugin.languageReader.get("Help_Info"));
 		}
 
 		if (sender.hasPermission("brewery.cmd.unlabel")) {
-			cmds.add (p.languageReader.get("Help_UnLabel"));
+			cmds.add (breweryPlugin.languageReader.get("Help_UnLabel"));
 		}
 
 		if (sender.hasPermission("brewery.cmd.copy")) {
-			cmds.add (p.languageReader.get("Help_Copy"));
+			cmds.add (breweryPlugin.languageReader.get("Help_Copy"));
 		}
 
 		if (sender.hasPermission("brewery.cmd.delete")) {
-			cmds.add (p.languageReader.get("Help_Delete"));
+			cmds.add (breweryPlugin.languageReader.get("Help_Delete"));
 		}
 
 		if (sender.hasPermission("brewery.cmd.infoOther")) {
-			cmds.add (p.languageReader.get("Help_InfoOther"));
+			cmds.add (breweryPlugin.languageReader.get("Help_InfoOther"));
 		}
 
 		if (sender.hasPermission("brewery.cmd.wakeup")) {
-			cmds.add(p.languageReader.get("Help_Wakeup"));
-			cmds.add(p.languageReader.get("Help_WakeupList"));
-			cmds.add(p.languageReader.get("Help_WakeupCheck"));
-			cmds.add(p.languageReader.get("Help_WakeupCheckSpecific"));
-			cmds.add(p.languageReader.get("Help_WakeupAdd"));
-			cmds.add(p.languageReader.get("Help_WakeupRemove"));
+			cmds.add(breweryPlugin.languageReader.get("Help_Wakeup"));
+			cmds.add(breweryPlugin.languageReader.get("Help_WakeupList"));
+			cmds.add(breweryPlugin.languageReader.get("Help_WakeupCheck"));
+			cmds.add(breweryPlugin.languageReader.get("Help_WakeupCheckSpecific"));
+			cmds.add(breweryPlugin.languageReader.get("Help_WakeupAdd"));
+			cmds.add(breweryPlugin.languageReader.get("Help_WakeupRemove"));
 		}
 
 		if (sender.hasPermission("brewery.cmd.reload")) {
-			cmds.add(p.languageReader.get("Help_Reload"));
+			cmds.add(breweryPlugin.languageReader.get("Help_Reload"));
 		}
 
 		if (sender.hasPermission("brewery.cmd.persist")) {
-			cmds.add(p.languageReader.get("Help_Persist"));
+			cmds.add(breweryPlugin.languageReader.get("Help_Persist"));
 		}
 
 		if (sender.hasPermission("brewery.cmd.static")) {
-			cmds.add(p.languageReader.get("Help_Static"));
+			cmds.add(breweryPlugin.languageReader.get("Help_Static"));
 		}
 
 		if (sender.hasPermission("brewery.cmd.create")) {
-			cmds.add(p.languageReader.get("Help_Create"));
+			cmds.add(breweryPlugin.languageReader.get("Help_Create"));
 		}
 
 		return cmds;
@@ -234,7 +234,7 @@ public class CommandListener implements CommandExecutor {
 			int page = 1;
 			String world = null;
 			if (args.length > 2) {
-				page = p.parseInt(args[2]);
+				page = breweryPlugin.parseInt(args[2]);
 			}
 			if (args.length > 3) {
 				world = args[3];
@@ -244,18 +244,18 @@ public class CommandListener implements CommandExecutor {
 		} else if (args[1].equalsIgnoreCase("remove")){
 
 			if (args.length > 2) {
-				int id = p.parseInt(args[2]);
+				int id = breweryPlugin.parseInt(args[2]);
 				Wakeup.remove(sender, id);
 			} else {
-				p.msg(sender, p.languageReader.get("Etc_Usage"));
-				p.msg(sender, p.languageReader.get("Help_WakeupRemove"));
+				breweryPlugin.msg(sender, breweryPlugin.languageReader.get("Etc_Usage"));
+				breweryPlugin.msg(sender, breweryPlugin.languageReader.get("Help_WakeupRemove"));
 			}
 
 		} else if (args[1].equalsIgnoreCase("check")){
 
 			int id = -1;
 			if (args.length > 2) {
-				id = p.parseInt(args[2]);
+				id = breweryPlugin.parseInt(args[2]);
 				if (id < 0) {
 					id = 0;
 				}
@@ -268,29 +268,29 @@ public class CommandListener implements CommandExecutor {
 
 		} else {
 
-			p.msg(sender, p.languageReader.get("Error_UnknownCommand"));
-			p.msg(sender, p.languageReader.get("Error_ShowHelp"));
+			breweryPlugin.msg(sender, breweryPlugin.languageReader.get("Error_UnknownCommand"));
+			breweryPlugin.msg(sender, breweryPlugin.languageReader.get("Error_ShowHelp"));
 
 		}
 	}
 
 	public void cmdPlayer(CommandSender sender, String[] args) {
 
-		int drunkeness = p.parseInt(args[1]);
+		int drunkeness = breweryPlugin.parseInt(args[1]);
 		if (drunkeness < 0) {
 			return;
 		}
 		int quality = -1;
 		if (args.length > 2) {
-			quality = p.parseInt(args[2]);
+			quality = breweryPlugin.parseInt(args[2]);
 			if (quality < 1 || quality > 10) {
-				p.msg(sender, p.languageReader.get("CMD_Player_Error"));
+				breweryPlugin.msg(sender, breweryPlugin.languageReader.get("CMD_Player_Error"));
 				return;
 			}
 		}
 
 		String playerName = args[0];
-		Player player = P.p.getServer().getPlayerExact(playerName);
+		Player player = BreweryPlugin.instance.getServer().getPlayerExact(playerName);
 		BPlayer bPlayer;
 		if (player == null) {
 			bPlayer = BPlayer.getByName(playerName);
@@ -322,7 +322,7 @@ public class CommandListener implements CommandExecutor {
 				}
 			}
 		}
-		p.msg(sender, p.languageReader.get("CMD_Player", playerName, "" + drunkeness, "" + bPlayer.getQuality()));
+		breweryPlugin.msg(sender, breweryPlugin.languageReader.get("CMD_Player", playerName, "" + drunkeness, "" + bPlayer.getQuality()));
 
 	}
 
@@ -333,12 +333,12 @@ public class CommandListener implements CommandExecutor {
 				Player player = (Player) sender;
 				playerName = player.getName();
 			} else {
-				p.msg(sender, p.languageReader.get("Error_PlayerCommand"));
+				breweryPlugin.msg(sender, breweryPlugin.languageReader.get("Error_PlayerCommand"));
 				return;
 			}
 		}
 
-		Player player = P.p.getServer().getPlayerExact(playerName);
+		Player player = BreweryPlugin.instance.getServer().getPlayerExact(playerName);
 		BPlayer bPlayer;
 		if (player == null) {
 			bPlayer = BPlayer.getByName(playerName);
@@ -346,9 +346,9 @@ public class CommandListener implements CommandExecutor {
 			bPlayer = BPlayer.get(player);
 		}
 		if (bPlayer == null) {
-			p.msg(sender, p.languageReader.get("CMD_Info_NotDrunk", playerName));
+			breweryPlugin.msg(sender, breweryPlugin.languageReader.get("CMD_Info_NotDrunk", playerName));
 		} else {
-			p.msg(sender, p.languageReader.get("CMD_Info_Drunk", playerName, "" + bPlayer.getDrunkeness(), "" + bPlayer.getQuality()));
+			breweryPlugin.msg(sender, breweryPlugin.languageReader.get("CMD_Info_Drunk", playerName, "" + bPlayer.getDrunkeness(), "" + bPlayer.getQuality()));
 		}
 
 	}
@@ -357,8 +357,8 @@ public class CommandListener implements CommandExecutor {
 
 		if (sender instanceof Player) {
 			if (count < 1 || count > 36) {
-				p.msg(sender, p.languageReader.get("Etc_Usage"));
-				p.msg(sender, p.languageReader.get("Help_Copy"));
+				breweryPlugin.msg(sender, breweryPlugin.languageReader.get("Etc_Usage"));
+				breweryPlugin.msg(sender, breweryPlugin.languageReader.get("Help_Copy"));
 				return;
 			}
 			Player player = (Player) sender;
@@ -369,22 +369,22 @@ public class CommandListener implements CommandExecutor {
 					while (count > 0) {
 						ItemStack item = brew.copy(hand);
 						if (!(player.getInventory().addItem(item)).isEmpty()) {
-							p.msg(sender, p.languageReader.get("CMD_Copy_Error", "" + count));
+							breweryPlugin.msg(sender, breweryPlugin.languageReader.get("CMD_Copy_Error", "" + count));
 							return;
 						}
 						count--;
 					}
 					if (brew.isPersistent()) {
-						p.msg(sender, p.languageReader.get("CMD_CopyNotPersistent"));
+						breweryPlugin.msg(sender, breweryPlugin.languageReader.get("CMD_CopyNotPersistent"));
 					}
 					return;
 				}
 			}
 
-			p.msg(sender, p.languageReader.get("Error_ItemNotPotion"));
+			breweryPlugin.msg(sender, breweryPlugin.languageReader.get("Error_ItemNotPotion"));
 
 		} else {
-			p.msg(sender, p.languageReader.get("Error_PlayerCommand"));
+			breweryPlugin.msg(sender, breweryPlugin.languageReader.get("Error_PlayerCommand"));
 		}
 
 	}
@@ -398,7 +398,7 @@ public class CommandListener implements CommandExecutor {
 				Brew brew = Brew.get(hand);
 				if (brew != null) {
 					if (brew.isPersistent()) {
-						p.msg(sender, p.languageReader.get("CMD_PersistRemove"));
+						breweryPlugin.msg(sender, breweryPlugin.languageReader.get("CMD_PersistRemove"));
 					} else {
 						brew.remove(hand);
 						player.setItemInHand(new ItemStack(Material.AIR));
@@ -406,9 +406,9 @@ public class CommandListener implements CommandExecutor {
 					return;
 				}
 			}
-			p.msg(sender, p.languageReader.get("Error_ItemNotPotion"));
+			breweryPlugin.msg(sender, breweryPlugin.languageReader.get("Error_ItemNotPotion"));
 		} else {
-			p.msg(sender, p.languageReader.get("Error_PlayerCommand"));
+			breweryPlugin.msg(sender, breweryPlugin.languageReader.get("Error_PlayerCommand"));
 		}
 
 	}
@@ -424,18 +424,18 @@ public class CommandListener implements CommandExecutor {
 					if (brew.isPersistent()) {
 						brew.removePersistence();
 						brew.setStatic(false, hand);
-						p.msg(sender, p.languageReader.get("CMD_UnPersist"));
+						breweryPlugin.msg(sender, breweryPlugin.languageReader.get("CMD_UnPersist"));
 					} else {
 						brew.makePersistent();
 						brew.setStatic(true, hand);
-						p.msg(sender, p.languageReader.get("CMD_Persistent"));
+						breweryPlugin.msg(sender, breweryPlugin.languageReader.get("CMD_Persistent"));
 					}
 					return;
 				}
 			}
-			p.msg(sender, p.languageReader.get("Error_ItemNotPotion"));
+			breweryPlugin.msg(sender, breweryPlugin.languageReader.get("Error_ItemNotPotion"));
 		} else {
-			p.msg(sender, p.languageReader.get("Error_PlayerCommand"));
+			breweryPlugin.msg(sender, breweryPlugin.languageReader.get("Error_PlayerCommand"));
 		}
 
 	}
@@ -451,20 +451,20 @@ public class CommandListener implements CommandExecutor {
 					if (brew.isStatic()) {
 						if (!brew.isPersistent()) {
 							brew.setStatic(false, hand);
-							p.msg(sender, p.languageReader.get("CMD_NonStatic"));
+							breweryPlugin.msg(sender, breweryPlugin.languageReader.get("CMD_NonStatic"));
 						} else {
-							p.msg(sender, p.languageReader.get("Error_PersistStatic"));
+							breweryPlugin.msg(sender, breweryPlugin.languageReader.get("Error_PersistStatic"));
 						}
 					} else {
 						brew.setStatic(true, hand);
-						p.msg(sender, p.languageReader.get("CMD_Static"));
+						breweryPlugin.msg(sender, breweryPlugin.languageReader.get("CMD_Static"));
 					}
 					return;
 				}
 			}
-			p.msg(sender, p.languageReader.get("Error_ItemNotPotion"));
+			breweryPlugin.msg(sender, breweryPlugin.languageReader.get("Error_ItemNotPotion"));
 		} else {
-			p.msg(sender, p.languageReader.get("Error_PlayerCommand"));
+			breweryPlugin.msg(sender, breweryPlugin.languageReader.get("Error_PlayerCommand"));
 		}
 
 	}
@@ -478,13 +478,13 @@ public class CommandListener implements CommandExecutor {
 				Brew brew = Brew.get(hand);
 				if (brew != null) {
 					brew.unLabel(hand);
-					p.msg(sender, p.languageReader.get("CMD_UnLabel"));
+					breweryPlugin.msg(sender, breweryPlugin.languageReader.get("CMD_UnLabel"));
 					return;
 				}
 			}
-			p.msg(sender, p.languageReader.get("Error_ItemNotPotion"));
+			breweryPlugin.msg(sender, breweryPlugin.languageReader.get("Error_ItemNotPotion"));
 		} else {
-			p.msg(sender, p.languageReader.get("Error_PlayerCommand"));
+			breweryPlugin.msg(sender, breweryPlugin.languageReader.get("Error_PlayerCommand"));
 		}
 
 	}
@@ -493,15 +493,15 @@ public class CommandListener implements CommandExecutor {
 
 		if (sender instanceof Player) {
 			if (args.length < 2) {
-				p.msg(sender, p.languageReader.get("Etc_Usage"));
-				p.msg(sender, p.languageReader.get("Help_Create"));
+				breweryPlugin.msg(sender, breweryPlugin.languageReader.get("Etc_Usage"));
+				breweryPlugin.msg(sender, breweryPlugin.languageReader.get("Help_Create"));
 				return;
 			}
 
 			int quality = 10;
 			boolean hasQuality = false;
 			if (args.length > 2) {
-				quality = p.parseInt(args[args.length - 1]);
+				quality = breweryPlugin.parseInt(args[args.length - 1]);
 				if (quality > 0 && quality <= 10) {
 					hasQuality = true;
 				} else {
@@ -532,7 +532,7 @@ public class CommandListener implements CommandExecutor {
 			Player player = (Player) sender;
 
 			if (player.getInventory().firstEmpty() == -1) {
-				p.msg(sender, p.languageReader.get("CMD_Copy_Error", "1"));
+				breweryPlugin.msg(sender, breweryPlugin.languageReader.get("CMD_Copy_Error", "1"));
 				return;
 			}
 
@@ -546,11 +546,11 @@ public class CommandListener implements CommandExecutor {
 			if (recipe != null) {
 				player.getInventory().addItem(recipe.create(quality));
 			} else {
-				p.msg(sender, p.languageReader.get("Error_NoBrewName", name));
+				breweryPlugin.msg(sender, breweryPlugin.languageReader.get("Error_NoBrewName", name));
 			}
 
 		} else {
-			p.msg(sender, p.languageReader.get("Error_PlayerCommand"));
+			breweryPlugin.msg(sender, breweryPlugin.languageReader.get("Error_PlayerCommand"));
 		}
 	}
 

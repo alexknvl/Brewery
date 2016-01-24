@@ -54,16 +54,16 @@ public class BPlayer {
 
 	public static BPlayer get(Player player) {
 		if (!players.isEmpty()) {
-			return players.get(P.playerString(player));
+			return players.get(BreweryPlugin.playerString(player));
 		}
 		return null;
 	}
 
 	// This method may be slow and should not be used if not needed
 	public static BPlayer getByName(String playerName) {
-		if (P.useUUID) {
+		if (BreweryPlugin.useUUID) {
 			for (Map.Entry<String, BPlayer> entry : players.entrySet()) {
-				OfflinePlayer p = P.p.getServer().getOfflinePlayer(UUID.fromString(entry.getKey()));
+				OfflinePlayer p = BreweryPlugin.instance.getServer().getOfflinePlayer(UUID.fromString(entry.getKey()));
 				if (p != null) {
 					String name = p.getName();
 					if (name != null) {
@@ -80,9 +80,9 @@ public class BPlayer {
 
 	// This method may be slow and should not be used if not needed
 	public static boolean hasPlayerbyName(String playerName) {
-		if (P.useUUID) {
+		if (BreweryPlugin.useUUID) {
 			for (Map.Entry<String, BPlayer> entry : players.entrySet()) {
-				OfflinePlayer p = P.p.getServer().getOfflinePlayer(UUID.fromString(entry.getKey()));
+				OfflinePlayer p = BreweryPlugin.instance.getServer().getOfflinePlayer(UUID.fromString(entry.getKey()));
 				if (p != null) {
 					String name = p.getName();
 					if (name != null) {
@@ -102,18 +102,18 @@ public class BPlayer {
 	}
 
 	public static boolean hasPlayer(Player player) {
-		return players.containsKey(P.playerString(player));
+		return players.containsKey(BreweryPlugin.playerString(player));
 	}
 
 	// Create a new BPlayer and add it to the list
 	public static BPlayer addPlayer(Player player) {
 		BPlayer bPlayer = new BPlayer();
-		players.put(P.playerString(player), bPlayer);
+		players.put(BreweryPlugin.playerString(player), bPlayer);
 		return bPlayer;
 	}
 
 	public static void remove(Player player) {
-		players.remove(P.playerString(player));
+		players.remove(BreweryPlugin.playerString(player));
 	}
 
 	public void remove() {
@@ -171,7 +171,7 @@ public class BPlayer {
 			quality = getQuality() * 100;
 			drunkeness = 100;
 			addPuke(player, 60 + (int) (Math.random() * 60.0));
-			P.p.msg(player, P.p.languageReader.get("Player_CantDrink"));
+			BreweryPlugin.instance.msg(player, BreweryPlugin.instance.languageReader.get("Player_CantDrink"));
 		}
 	}
 
@@ -253,7 +253,7 @@ public class BPlayer {
 	}
 
 	public void passOut(Player player) {
-		player.kickPlayer(P.p.languageReader.get("Player_DrunkPassOut"));
+		player.kickPlayer(BreweryPlugin.instance.languageReader.get("Player_DrunkPassOut"));
 		offlineDrunk = drunkeness;
 		passedOut = true;
 	}
@@ -302,7 +302,7 @@ public class BPlayer {
 			return;
 		}
 		// delayed login event as the player is not fully accessible pre login
-		P.p.getServer().getScheduler().runTaskLater(P.p, new Runnable() {
+		BreweryPlugin.instance.getServer().getScheduler().runTaskLater(BreweryPlugin.instance, new Runnable() {
 			public void run() {
 				login(player);
 			}
@@ -319,14 +319,14 @@ public class BPlayer {
 			}
 			hangoverEffects(player);
 			// wird der spieler noch gebraucht?
-			players.remove(P.playerString(player));
+			players.remove(BreweryPlugin.playerString(player));
 
 		} else if (offlineDrunk - drunkeness >= 30) {
 			Location randomLoc = Wakeup.getRandom(player.getLocation());
 			if (randomLoc != null) {
 				if (!player.hasPermission("brewery.bypass.teleport")) {
 					player.teleport(randomLoc);
-					P.p.msg(player, P.p.languageReader.get("Player_Wake"));
+					BreweryPlugin.instance.msg(player, BreweryPlugin.instance.languageReader.get("Player_Wake"));
 				}
 			}
 		}
@@ -349,7 +349,7 @@ public class BPlayer {
 			} else if (homeType.startsWith("cmd:")) {
 				player.performCommand(homeType.substring(4));
 			} else {
-				P.p.errorLog("Config.yml 'homeType: " + homeType + "' unknown!");
+				BreweryPlugin.instance.errorLog("Config.yml 'homeType: " + homeType + "' unknown!");
 			}
 			if (home != null) {
 				player.teleport(home);
@@ -384,7 +384,7 @@ public class BPlayer {
 		}
 
 		if (pTasks.isEmpty()) {
-			taskId = P.p.getServer().getScheduler().scheduleSyncRepeatingTask(P.p, new Runnable() {
+			taskId = BreweryPlugin.instance.getServer().getScheduler().scheduleSyncRepeatingTask(BreweryPlugin.instance, new Runnable() {
 				public void run() {
 					pukeTask();
 				}
@@ -404,7 +404,7 @@ public class BPlayer {
 			}
 		}
 		if (pTasks.isEmpty()) {
-			P.p.getServer().getScheduler().cancelTask(taskId);
+			BreweryPlugin.instance.getServer().getScheduler().cancelTask(taskId);
 		}
 	}
 
@@ -490,7 +490,7 @@ public class BPlayer {
 
 			if (bplayer.drunkeness > 30) {
 				if (bplayer.offlineDrunk == 0) {
-					Player player = P.getPlayerfromString(name);
+					Player player = BreweryPlugin.getPlayerfromString(name);
 					if (player != null) {
 
 						bplayer.drunkEffects(player);
@@ -518,7 +518,7 @@ public class BPlayer {
 					// Prevent 0 drunkeness
 					soberPerMin++;
 				}
-				if (bplayer.drain(P.getPlayerfromString(name), soberPerMin)) {
+				if (bplayer.drain(BreweryPlugin.getPlayerfromString(name), soberPerMin)) {
 					iter.remove();
 				}
 			}
@@ -563,7 +563,7 @@ public class BPlayer {
 
 	public int getQuality() {
 		if (drunkeness == 0) {
-			P.p.errorLog("drunkeness should not be 0!");
+			BreweryPlugin.instance.errorLog("drunkeness should not be 0!");
 			return quality;
 		}
 		if (drunkeness < 0) {

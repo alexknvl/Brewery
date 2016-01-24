@@ -1,12 +1,10 @@
 package com.dre.brewery.integration;
 
-import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 
-import com.dre.brewery.P;
+import com.dre.brewery.BreweryPlugin;
 import me.ryanhamshire.GriefPrevention.GriefPrevention;
-import me.ryanhamshire.GriefPrevention.Messages;
 import me.ryanhamshire.GriefPrevention.PlayerData;
 import me.ryanhamshire.GriefPrevention.Claim;
 
@@ -26,7 +24,7 @@ public class GriefPreventionBarrel {
 		if (gp.config_claims_preventTheft) {
 			// block container use during pvp combat
 			if (playerData.inPvpCombat()) {
-				P.p.msg(player, P.p.languageReader.get("Error_NoBarrelAccess"));
+				BreweryPlugin.instance.msg(player, BreweryPlugin.instance.languageReader.get("Error_NoBarrelAccess"));
 				return false;
 			}
 
@@ -37,7 +35,7 @@ public class GriefPreventionBarrel {
 				String noContainersReason = claim.allowContainers(player);
 				if(noContainersReason != null)
 				{
-					P.p.msg(player, P.p.languageReader.get("Error_NoBarrelAccess"));
+					BreweryPlugin.instance.msg(player, BreweryPlugin.instance.languageReader.get("Error_NoBarrelAccess"));
 					return false;
 				}
 			}

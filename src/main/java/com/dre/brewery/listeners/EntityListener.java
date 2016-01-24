@@ -18,7 +18,7 @@ import org.bukkit.inventory.ItemStack;
 
 import com.dre.brewery.Barrel;
 import com.dre.brewery.Brew;
-import com.dre.brewery.P;
+import com.dre.brewery.BreweryPlugin;
 import com.dre.brewery.integration.LWCBarrel;
 
 public class EntityListener implements Listener {
@@ -66,7 +66,7 @@ public class EntityListener implements Listener {
 			}
 			if (!removedBarrel) {
 				if (barrel != null) {
-					if (P.p.useLWC) {
+					if (BreweryPlugin.instance.useLWC) {
 						try {
 							if (LWCBarrel.blockExplosion(barrel, block)) {
 								iter.remove();
@@ -74,7 +74,7 @@ public class EntityListener implements Listener {
 								removedBarrel = true;
 							}
 						} catch (Exception e) {
-							P.p.errorLog("Failed to Check LWC on Barrel Explosion!");
+							BreweryPlugin.instance.errorLog("Failed to Check LWC on Barrel Explosion!");
 							e.printStackTrace();
 							removedBarrel = true;
 						}

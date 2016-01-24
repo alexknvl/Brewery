@@ -1,11 +1,11 @@
 package com.dre.brewery.integration;
 
 
+import com.dre.brewery.BreweryPlugin;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
-import com.dre.brewery.P;
 import com.sk89q.worldguard.bukkit.RegionQuery;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import com.sk89q.worldguard.bukkit.permission.RegionPermissionModel;
@@ -22,7 +22,7 @@ public class WGBarrelNew implements WGBarrel {
 		RegionQuery query = wg.getRegionContainer().createQuery();
 
 		if (!query.testBuild(spigot.getLocation(), player, DefaultFlag.USE, DefaultFlag.CHEST_ACCESS)) {
-			P.p.msg(player, P.p.languageReader.get("Error_NoBarrelAccess"));
+			BreweryPlugin.instance.msg(player, BreweryPlugin.instance.languageReader.get("Error_NoBarrelAccess"));
 			return false;
 		}
 

@@ -62,7 +62,7 @@ public class Brew {
 	public static Brew get(int uid) {
 		if (uid < -1) {
 			if (!potions.containsKey(uid)) {
-				P.p.errorLog("Database failure! unable to find UID " + uid + " of a custom Potion!");
+				BreweryPlugin.instance.errorLog("Database failure! unable to find UID " + uid + " of a custom Potion!");
 				return null;// throw some exception?
 			}
 		} else {
@@ -133,10 +133,10 @@ public class Brew {
 					if (!stat) {
 						this.quality = calcQuality();
 					}
-					P.p.log("Brew was made from Recipe: '" + name + "' which could not be found. '" + currentRecipe.getName(5) + "' used instead!");
+					BreweryPlugin.instance.log("Brew was made from Recipe: '" + name + "' which could not be found. '" + currentRecipe.getName(5) + "' used instead!");
 					return true;
 				} else {
-					P.p.errorLog("Brew was made from Recipe: '" + name + "' which could not be found!");
+					BreweryPlugin.instance.errorLog("Brew was made from Recipe: '" + name + "' which could not be found!");
 				}
 			}
 		}
@@ -265,10 +265,10 @@ public class Brew {
 		PotionMeta meta = (PotionMeta) item.getItemMeta();
 		if (meta.hasLore()) {
 			if (distillRuns > 0) {
-				addOrReplaceLore(meta, P.p.color("&7"), P.p.languageReader.get("Brew_Distilled"));
+				addOrReplaceLore(meta, BreweryPlugin.instance.color("&7"), BreweryPlugin.instance.languageReader.get("Brew_Distilled"));
 			}
 			if (ageTime >= 1) {
-				addOrReplaceLore(meta, P.p.color("&7"), P.p.languageReader.get("Brew_BarrelRiped"));
+				addOrReplaceLore(meta, BreweryPlugin.instance.color("&7"), BreweryPlugin.instance.languageReader.get("Brew_BarrelRiped"));
 			}
 			item.setItemMeta(meta);
 		}
@@ -335,12 +335,12 @@ public class Brew {
 			quality = calcQuality();
 
 			addOrReplaceEffects(potionMeta, getEffects(), quality);
-			potionMeta.setDisplayName(P.p.color("&f" + recipe.getName(quality)));
+			potionMeta.setDisplayName(BreweryPlugin.instance.color("&f" + recipe.getName(quality)));
 			slotItem.setDurability(PotionColor.valueOf(recipe.getColor()).getColorId(canDistill()));
 		} else {
 			quality = 0;
 			removeEffects(potionMeta);
-			potionMeta.setDisplayName(P.p.color("&f" + P.p.languageReader.get("Brew_DistillUndefined")));
+			potionMeta.setDisplayName(BreweryPlugin.instance.color("&f" + BreweryPlugin.instance.languageReader.get("Brew_DistillUndefined")));
 			slotItem.setDurability(PotionColor.GREY.getColorId(canDistill()));
 		}
 
@@ -350,7 +350,7 @@ public class Brew {
 				convertLore(potionMeta, colorInBrewer);
 			}
 		}
-		String prefix = P.p.color("&7");
+		String prefix = BreweryPlugin.instance.color("&7");
 		if (colorInBrewer && currentRecipe != null) {
 			prefix = getQualityColor(ingredients.getDistillQuality(recipe, distillRuns));
 		}
@@ -384,12 +384,12 @@ public class Brew {
 				quality = calcQuality();
 
 				addOrReplaceEffects(potionMeta, getEffects(), quality);
-				potionMeta.setDisplayName(P.p.color("&f" + recipe.getName(quality)));
+				potionMeta.setDisplayName(BreweryPlugin.instance.color("&f" + recipe.getName(quality)));
 				item.setDurability(PotionColor.valueOf(recipe.getColor()).getColorId(canDistill()));
 			} else {
 				quality = 0;
 				removeEffects(potionMeta);
-				potionMeta.setDisplayName(P.p.color("&f" + P.p.languageReader.get("Brew_BadPotion")));
+				potionMeta.setDisplayName(BreweryPlugin.instance.color("&f" + BreweryPlugin.instance.languageReader.get("Brew_BadPotion")));
 				item.setDurability(PotionColor.GREY.getColorId(canDistill()));
 			}
 		}
@@ -401,7 +401,7 @@ public class Brew {
 			}
 		}
 		if (ageTime >= 1) {
-			String prefix = P.p.color("&7");
+			String prefix = BreweryPlugin.instance.color("&7");
 			if (colorInBarrels && currentRecipe != null) {
 				prefix = getQualityColor(ingredients.getAgeQuality(currentRecipe, ageTime));
 			}
@@ -446,14 +446,14 @@ public class Brew {
 		}
 		meta.setLore(null);
 		int quality;
-		String prefix = P.p.color("&7");
+		String prefix = BreweryPlugin.instance.color("&7");
 		String lore;
 
 		// Ingredients
 		if (toQuality && !unlabeled) {
 			quality = ingredients.getIngredientQuality(currentRecipe);
 			prefix = getQualityColor(quality);
-			lore = P.p.languageReader.get("Brew_Ingredients");
+			lore = BreweryPlugin.instance.languageReader.get("Brew_Ingredients");
 			addOrReplaceLore(meta, prefix, lore);
 		}
 
@@ -461,11 +461,11 @@ public class Brew {
 		if (toQuality && !unlabeled) {
 			if (distillRuns > 0 == currentRecipe.needsDistilling()) {
 				quality = ingredients.getCookingQuality(currentRecipe, distillRuns > 0);
-				prefix = getQualityColor(quality) + ingredients.getCookedTime() + " " + P.p.languageReader.get("Brew_minute");
+				prefix = getQualityColor(quality) + ingredients.getCookedTime() + " " + BreweryPlugin.instance.languageReader.get("Brew_minute");
 				if (ingredients.getCookedTime() > 1) {
-					prefix = prefix + P.p.languageReader.get("Brew_MinutePluralPostfix");
+					prefix = prefix + BreweryPlugin.instance.languageReader.get("Brew_MinutePluralPostfix");
 				}
-				lore = " " + P.p.languageReader.get("Brew_fermented");
+				lore = " " + BreweryPlugin.instance.languageReader.get("Brew_fermented");
 				addOrReplaceLore(meta, prefix, lore);
 			}
 		}
@@ -500,35 +500,35 @@ public class Brew {
 	public void updateDistillLore(String prefix, PotionMeta meta) {
 		if (!unlabeled) {
 			if (distillRuns > 1) {
-				prefix = prefix + distillRuns + P.p.languageReader.get("Brew_-times") + " ";
+				prefix = prefix + distillRuns + BreweryPlugin.instance.languageReader.get("Brew_-times") + " ";
 			}
 		}
-		addOrReplaceLore(meta, prefix, P.p.languageReader.get("Brew_Distilled"));
+		addOrReplaceLore(meta, prefix, BreweryPlugin.instance.languageReader.get("Brew_Distilled"));
 	}
 
 	// sets the AgeLore. Prefix is the color to be used
 	public void updateAgeLore(String prefix, PotionMeta meta) {
 		if (!unlabeled) {
 			if (ageTime >= 1 && ageTime < 2) {
-				prefix = prefix + P.p.languageReader.get("Brew_OneYear") + " ";
+				prefix = prefix + BreweryPlugin.instance.languageReader.get("Brew_OneYear") + " ";
 			} else if (ageTime < 201) {
-				prefix = prefix + (int) Math.floor(ageTime) + " " + P.p.languageReader.get("Brew_Years") + " ";
+				prefix = prefix + (int) Math.floor(ageTime) + " " + BreweryPlugin.instance.languageReader.get("Brew_Years") + " ";
 			} else {
-				prefix = prefix + P.p.languageReader.get("Brew_HundredsOfYears") + " ";
+				prefix = prefix + BreweryPlugin.instance.languageReader.get("Brew_HundredsOfYears") + " ";
 			}
 		}
-		addOrReplaceLore(meta, prefix, P.p.languageReader.get("Brew_BarrelRiped"));
+		addOrReplaceLore(meta, prefix, BreweryPlugin.instance.languageReader.get("Brew_BarrelRiped"));
 	}
 
 	// updates/sets the color on WoodLore
 	public void updateWoodLore(PotionMeta meta) {
 		if (currentRecipe.getWood() > 0) {
 			int quality = ingredients.getWoodQuality(currentRecipe, wood);
-			addOrReplaceLore(meta, getQualityColor(quality), P.p.languageReader.get("Brew_Woodtype"));
+			addOrReplaceLore(meta, getQualityColor(quality), BreweryPlugin.instance.languageReader.get("Brew_Woodtype"));
 		} else {
 			if (meta.hasLore()) {
 				List<String> existingLore = meta.getLore();
-				int index = indexOfSubstring(existingLore, P.p.languageReader.get("Brew_Woodtype"));
+				int index = indexOfSubstring(existingLore, BreweryPlugin.instance.languageReader.get("Brew_Woodtype"));
 				if (index > -1) {
 					existingLore.remove(index);
 					meta.setLore(existingLore);
@@ -592,7 +592,7 @@ public class Brew {
 
 	// True if the PotionMeta has colored Lore
 	public  static Boolean hasColorLore(PotionMeta meta) {
-		return meta.hasLore() && !meta.getLore().get(1).startsWith(P.p.color("&7"));
+		return meta.hasLore() && !meta.getLore().get(1).startsWith(BreweryPlugin.instance.color("&7"));
 	}
 
 	// gets the Color that represents a quality in Lore
@@ -609,7 +609,7 @@ public class Brew {
 		} else {
 			color = "&4";
 		}
-		return P.p.color(color);
+		return BreweryPlugin.instance.color(color);
 	}
 
 	// Saves all data

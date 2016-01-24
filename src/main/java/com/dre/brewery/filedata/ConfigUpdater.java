@@ -9,7 +9,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import com.dre.brewery.P;
+import com.dre.brewery.BreweryPlugin;
 
 public class ConfigUpdater {
 
@@ -126,7 +126,7 @@ public class ConfigUpdater {
 		}
 
 		if (!fromVersion.equals("1.3.1")) {
-			P.p.log(P.p.languageReader.get("Error_ConfigUpdate", fromVersion));
+			BreweryPlugin.instance.log(BreweryPlugin.instance.languageReader.get("Error_ConfigUpdate", fromVersion));
 			return;
 		}
 		saveConfig();
@@ -159,7 +159,7 @@ public class ConfigUpdater {
 		int index = indexOfStart("language: en");
 		if (index != -1) {
 			setLine(index, "language: de");
-			P.p.language = "de";
+			BreweryPlugin.instance.language = "de";
 		}
 
 		// Add the new entries for the Word Distortion above the words section

@@ -5,11 +5,10 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.dre.brewery.BreweryPlugin;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
-
-import com.dre.brewery.P;
 
 public class DataUpdater {
 
@@ -54,20 +53,20 @@ public class DataUpdater {
 						Map<String, Integer> ingredients = new HashMap<String, Integer>();
 						for (String ingredient : matSection.getKeys(false)) {
 							// convert to Material
-							Material mat = Material.getMaterial(P.p.parseInt(ingredient));
+							Material mat = Material.getMaterial(BreweryPlugin.instance.parseInt(ingredient));
 							if (mat != null) {
 								ingredients.put(mat.name(), matSection.getInt(ingredient));
 							}
 						}
 						section.set(id + ".mats", ingredients);
 					} else {
-						P.p.errorLog("Ingredient id: '" + id + "' incomplete in data.yml");
+						BreweryPlugin.instance.errorLog("Ingredient id: '" + id + "' incomplete in data.yml");
 					}
 				}
 			}
 		} catch (Exception e) {
 			// Getting Material by id may not work in the future
-			P.p.errorLog("Error Converting Ingredient Section of the Data File, newer versions of Bukkit may not support the old Save File anymore:");
+			BreweryPlugin.instance.errorLog("Error Converting Ingredient Section of the Data File, newer versions of Bukkit may not support the old Save File anymore:");
 			e.printStackTrace();
 		}
 
@@ -84,21 +83,21 @@ public class DataUpdater {
 								Map<String, Integer> ingredients = new HashMap<String, Integer>();
 								for (String ingredient : ingredientSection.getKeys(false)) {
 									// convert to Material
-									Material mat = Material.getMaterial(P.p.parseInt(ingredient));
+									Material mat = Material.getMaterial(BreweryPlugin.instance.parseInt(ingredient));
 									if (mat != null) {
 										ingredients.put(mat.name(), ingredientSection.getInt(ingredient));
 									}
 								}
 								cauldrons.set(id + ".ingredients", ingredients);
 							} else {
-								P.p.errorLog("BCauldron " + id + " is missing Ingredient Section");
+								BreweryPlugin.instance.errorLog("BCauldron " + id + " is missing Ingredient Section");
 							}
 						}
 					}
 				}
 			} catch (Exception e) {
 				// Getting Material by id may not work in the future
-				P.p.errorLog("Error Converting Ingredient Section of Cauldrons, newer versions of Bukkit may not support the old Save File anymore:");
+				BreweryPlugin.instance.errorLog("Error Converting Ingredient Section of Cauldrons, newer versions of Bukkit may not support the old Save File anymore:");
 				e.printStackTrace();
 			}
 		}

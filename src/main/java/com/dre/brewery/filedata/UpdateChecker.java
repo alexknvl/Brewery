@@ -7,9 +7,9 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 
+import com.dre.brewery.BreweryPlugin;
 import org.bukkit.entity.Player;
 
-import com.dre.brewery.P;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
@@ -43,7 +43,7 @@ public class UpdateChecker implements Runnable {
 		if (update == null || !player.isOp()) {
 			return;
 		}
-		P.p.msg(player, update);
+		BreweryPlugin.instance.msg(player, update);
 	}
 
 	@Override
@@ -108,18 +108,18 @@ public class UpdateChecker implements Runnable {
 
 				String[] split = versionName.split(DELIMETER);
 				if (split.length < 2) {
-					P.p.log("Malformed Remote File Name, could not check for updates");
+					BreweryPlugin.instance.log("Malformed Remote File Name, could not check for updates");
 				} else {
 					String version = split[1];
-					if (!P.p.getDescription().getVersion().equals(split[1].split(" ")[0])) {
+					if (!BreweryPlugin.instance.getDescription().getVersion().equals(split[1].split(" ")[0])) {
 						String[] verNew = version.split("\\.");
-						String[] verOld = P.p.getDescription().getVersion().split("\\.");
+						String[] verOld = BreweryPlugin.instance.getDescription().getVersion().split("\\.");
 
 						for (int i = 0; i < verNew.length; i++) {
-							if (i < verOld.length && P.p.parseInt(verOld[i]) > P.p.parseInt(verNew[i])) {
+							if (i < verOld.length && BreweryPlugin.instance.parseInt(verOld[i]) > BreweryPlugin.instance.parseInt(verNew[i])) {
 								break;
-							} else if (i >= verOld.length || P.p.parseInt(verOld[i]) < P.p.parseInt(verNew[i])) {
-								P.p.log("Update available for Brewery-" + P.p.getDescription().getVersion() + ": " + versionName);
+							} else if (i >= verOld.length || BreweryPlugin.instance.parseInt(verOld[i]) < BreweryPlugin.instance.parseInt(verNew[i])) {
+								BreweryPlugin.instance.log("Update available for Brewery-" + BreweryPlugin.instance.getDescription().getVersion() + ": " + versionName);
 								update = "Update available: v" + version;
 								break;
 							}
@@ -128,11 +128,11 @@ public class UpdateChecker implements Runnable {
 				}
 
 			} else {
-				P.p.log("There are no files for this project");
+				BreweryPlugin.instance.log("There are no files for this project");
 			}
 		} catch (IOException e) {
 			// There was an error reading the query
-			P.p.errorLog("Could not check for Updates. This error can probably be ignored");
+			BreweryPlugin.instance.errorLog("Could not check for Updates. This error can probably be ignored");
 			e.printStackTrace();
 		}
 	}

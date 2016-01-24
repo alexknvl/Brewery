@@ -3,11 +3,11 @@ package com.dre.brewery.integration;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
+import com.dre.brewery.BreweryPlugin;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
-import com.dre.brewery.P;
 import com.sk89q.worldguard.LocalPlayer;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import com.sk89q.worldguard.protection.ApplicableRegionSet;
@@ -25,9 +25,9 @@ public class WGBarrelOld implements WGBarrel {
 			allows = ApplicableRegionSet.class.getMethod("allows", StateFlag.class, LocalPlayer.class);
 			canBuild = ApplicableRegionSet.class.getMethod("canBuild", LocalPlayer.class);
 		} catch (NoSuchMethodException e) {
-			P.p.errorLog("Failed to Hook WorldGuard for Barrel Open Permissions! Opening Barrels will NOT work!");
-			P.p.errorLog("Brewery was tested with version 5.8 to 6.0 of WorldGuard!");
-			P.p.errorLog("Disable the WorldGuard support in the config and do /brew reload");
+			BreweryPlugin.instance.errorLog("Failed to Hook WorldGuard for Barrel Open Permissions! Opening Barrels will NOT work!");
+			BreweryPlugin.instance.errorLog("Brewery was tested with version 5.8 to 6.0 of WorldGuard!");
+			BreweryPlugin.instance.errorLog("Disable the WorldGuard support in the config and do /brew reload");
 			e.printStackTrace();
 		}
 	}
@@ -44,7 +44,7 @@ public class WGBarrelOld implements WGBarrel {
 
 					if (!(Boolean) allows.invoke(region, DefaultFlag.CHEST_ACCESS, localPlayer)) {
 						if (!(Boolean) canBuild.invoke(region, localPlayer)) {
-							P.p.msg(player, P.p.languageReader.get("Error_NoBarrelAccess"));
+							BreweryPlugin.instance.msg(player, BreweryPlugin.instance.languageReader.get("Error_NoBarrelAccess"));
 							return false;
 						}
 					}

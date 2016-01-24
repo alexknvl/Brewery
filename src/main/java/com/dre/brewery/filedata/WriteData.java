@@ -4,9 +4,8 @@ package com.dre.brewery.filedata;
 import java.io.File;
 import java.io.IOException;
 
+import com.dre.brewery.BreweryPlugin;
 import org.bukkit.configuration.file.FileConfiguration;
-
-import com.dre.brewery.P;
 
 public class WriteData implements Runnable {
 
@@ -18,7 +17,7 @@ public class WriteData implements Runnable {
 
 	@Override
 	public void run() {
-		File datafile = new File(P.p.getDataFolder(), "data.yml");
+		File datafile = new File(BreweryPlugin.instance.getDataFolder(), "data.yml");
 
 		try {
 			data.save(datafile);

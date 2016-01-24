@@ -1,5 +1,6 @@
 package com.dre.brewery.listeners;
 
+import com.dre.brewery.*;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.*;
@@ -12,14 +13,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 
-import com.dre.brewery.BCauldron;
-import com.dre.brewery.BIngredients;
-import com.dre.brewery.Brew;
-import com.dre.brewery.Barrel;
-import com.dre.brewery.BPlayer;
-import com.dre.brewery.Words;
-import com.dre.brewery.Wakeup;
-import com.dre.brewery.P;
+import com.dre.brewery.BreweryPlugin;
 import com.dre.brewery.filedata.UpdateChecker;
 
 
@@ -100,7 +94,7 @@ public class PlayerListener implements Listener {
 										}
 									}
 								} else {
-									P.p.msg(player, P.p.languageReader.get("Perms_NoCauldronInsert"));
+									BreweryPlugin.instance.msg(player, BreweryPlugin.instance.languageReader.get("Perms_NoCauldronInsert"));
 								}
 								event.setCancelled(true);
 							} else {
@@ -247,10 +241,10 @@ public class PlayerListener implements Listener {
 						bplayer.join(player);
 						return;
 					case 2:
-						event.disallow(PlayerLoginEvent.Result.KICK_OTHER, P.p.languageReader.get("Player_LoginDeny"));
+						event.disallow(PlayerLoginEvent.Result.KICK_OTHER, BreweryPlugin.instance.languageReader.get("Player_LoginDeny"));
 						return;
 					case 3:
-						event.disallow(PlayerLoginEvent.Result.KICK_OTHER, P.p.languageReader.get("Player_LoginDenyLong"));
+						event.disallow(PlayerLoginEvent.Result.KICK_OTHER, BreweryPlugin.instance.languageReader.get("Player_LoginDenyLong"));
 				}
 			}
 		}

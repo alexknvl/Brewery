@@ -92,7 +92,7 @@ public class BCauldron {
 		BCauldron bcauldron = get(block);
 		if (bcauldron != null) {
 			if (!player.hasPermission("brewery.cauldron.fill")) {
-				P.p.msg(player, P.p.languageReader.get("Perms_NoCauldronFill"));
+				BreweryPlugin.instance.msg(player, BreweryPlugin.instance.languageReader.get("Perms_NoCauldronFill"));
 				return true;
 			}
 			ItemStack potion = bcauldron.ingredients.cook(bcauldron.state);
@@ -146,15 +146,15 @@ public class BCauldron {
 	// prints the current cooking time to the player
 	public static void printTime(Player player, Block block) {
 		if (!player.hasPermission("brewery.cauldron.time")) {
-			P.p.msg(player, P.p.languageReader.get("Error_NoPermissions"));
+			BreweryPlugin.instance.msg(player, BreweryPlugin.instance.languageReader.get("Error_NoPermissions"));
 			return;
 		}
 		BCauldron bcauldron = get(block);
 		if (bcauldron != null) {
 			if (bcauldron.state > 1) {
-				P.p.msg(player, P.p.languageReader.get("Player_CauldronInfo1", "" + bcauldron.state));
+				BreweryPlugin.instance.msg(player, BreweryPlugin.instance.languageReader.get("Player_CauldronInfo1", "" + bcauldron.state));
 			} else {
-				P.p.msg(player, P.p.languageReader.get("Player_CauldronInfo2"));
+				BreweryPlugin.instance.msg(player, BreweryPlugin.instance.languageReader.get("Player_CauldronInfo2"));
 			}
 		}
 	}
@@ -180,7 +180,7 @@ public class BCauldron {
 	}
 
 	public static void save(ConfigurationSection config, ConfigurationSection oldData) {
-		P.p.createWorldSections(config);
+		BreweryPlugin.instance.createWorldSections(config);
 
 		if (!bcauldrons.isEmpty()) {
 			int id = 0;
@@ -189,7 +189,7 @@ public class BCauldron {
 				String prefix;
 
 				if (worldName.startsWith("DXL_")) {
-					prefix = P.p.getDxlName(worldName) + "." + id;
+					prefix = BreweryPlugin.instance.getDxlName(worldName) + "." + id;
 				} else {
 					prefix = cauldron.block.getWorld().getUID().toString() + "." + id;
 				}
@@ -215,7 +215,7 @@ public class BCauldron {
 	// bukkit bug not updating the inventory while executing event, have to
 	// schedule the give
 	public static void giveItem(final Player player, final ItemStack item) {
-		P.p.getServer().getScheduler().runTaskLater(P.p, new Runnable() {
+		BreweryPlugin.instance.getServer().getScheduler().runTaskLater(BreweryPlugin.instance, new Runnable() {
 			public void run() {
 				player.getInventory().addItem(item);
 			}

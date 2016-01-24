@@ -1,5 +1,6 @@
 package com.dre.brewery.listeners;
 
+import com.dre.brewery.BreweryPlugin;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -14,7 +15,6 @@ import org.bukkit.event.block.BlockBreakEvent;
 import com.dre.brewery.Barrel;
 import com.dre.brewery.BPlayer;
 import com.dre.brewery.Words;
-import com.dre.brewery.P;
 
 public class BlockListener implements Listener {
 
@@ -22,14 +22,14 @@ public class BlockListener implements Listener {
 	public void onSignChange(SignChangeEvent event) {
 		String[] lines = event.getLines();
 
-		if (lines[0].equalsIgnoreCase(P.p.languageReader.get("Etc_Barrel"))) {
+		if (lines[0].equalsIgnoreCase(BreweryPlugin.instance.languageReader.get("Etc_Barrel"))) {
 			Player player = event.getPlayer();
 			if (!player.hasPermission("brewery.createbarrel.small") && !player.hasPermission("brewery.createbarrel.big")) {
-				P.p.msg(player, P.p.languageReader.get("Perms_NoBarrelCreate"));
+				BreweryPlugin.instance.msg(player, BreweryPlugin.instance.languageReader.get("Perms_NoBarrelCreate"));
 				return;
 			}
 			if (Barrel.create(event.getBlock(), player)) {
-				P.p.msg(player, P.p.languageReader.get("Player_BarrelCreated"));
+				BreweryPlugin.instance.msg(player, BreweryPlugin.instance.languageReader.get("Player_BarrelCreated"));
 			}
 		}
 	}
@@ -45,14 +45,14 @@ public class BlockListener implements Listener {
 
 	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
 	public void onBlockBreak(BlockBreakEvent event) {
-		if (!P.p.blockDestroy(event.getBlock(), event.getPlayer())) {
+		if (!BreweryPlugin.instance.blockDestroy(event.getBlock(), event.getPlayer())) {
 			event.setCancelled(true);
 		}
 	}
 
 	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
 	public void onBlockBurn(BlockBurnEvent event) {
-		P.p.blockDestroy(event.getBlock(), null);
+		BreweryPlugin.instance.blockDestroy(event.getBlock(), null);
 	}
 
 	@EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
