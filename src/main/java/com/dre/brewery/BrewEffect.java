@@ -18,6 +18,49 @@ public class BrewEffect {
 		this.hidden = hidden;
 	}
 
+	public int getDuration(float quality, double intensity) {
+		int minDuration = durationRange.getMinimumInteger();
+		int maxDuration = durationRange.getMaximumInteger();
+		return (int) Math.round((minDuration + ((maxDuration - minDuration) * (quality / 10.0))) * intensity);
+	}
+
+	public int getLevel(float quality) {
+		int minLevel = levelRange.getMinimumInteger();
+		int maxLevel = levelRange.getMaximumInteger();
+		return (int) Math.round(minLevel + ((maxLevel - minLevel) * (quality / 10.0)));
+	}
+
+	public boolean isValid() {
+		int minLevel = levelRange.getMinimumInteger();
+		int maxLevel = levelRange.getMaximumInteger();
+		int minDuration = durationRange.getMinimumInteger();
+		int maxDuration = durationRange.getMaximumInteger();
+		return type != null && minLevel >= 0 && maxLevel >= 0 && minDuration >= 0 && maxDuration >= 0;
+	}
+
+	public static void apply(BrewEffect effect, int quality, Player player, double intensity) {
+		int duration = effect.getDuration(quality, intensity);
+		int lvl = effect.getLevel(quality);
+
+		if (lvl <= 0 || (duration <= 0 && !effect.type.isInstant())) {
+			return;
+		}
+
+		duration *= 20;
+		duration /= effect.type.getDurationModifier();
+		effect.type.createEffect(duration, lvl - 1).apply(player);
+	}
+
+	public static void updateMeta(BrewEffect effect, PotionMeta meta, int quality) {
+		int duration = effect.getDuration(quality, 1.0D);
+		int level = effect.getLevel(quality);
+		if ((duration > 0 || effect.type.isInstant()) && level > 0) {
+			meta.addCustomEffect(effect.type.createEffect(0, 0), true);
+		} else {
+			meta.removeCustomEffect(effect.type);
+		}
+	}
+
 	public static BrewEffect parse(String effectString) {
 		try {
 			boolean hidden;
@@ -85,48 +128,5 @@ public class BrewEffect {
 			return new IntRange(BreweryPlugin.instance.parseInt(range[0]),
 					BreweryPlugin.instance.parseInt(range[1]));
 		}
-	}
-
-	public static void apply(BrewEffect effect, int quality, Player player, double intensity) {
-		int duration = effect.getDuration(quality, intensity);
-		int lvl = effect.getLevel(quality);
-
-		if (lvl <= 0 || (duration <= 0 && !effect.type.isInstant())) {
-			return;
-		}
-
-		duration *= 20;
-		duration /= effect.type.getDurationModifier();
-		effect.type.createEffect(duration, lvl - 1).apply(player);
-	}
-
-	public int getDuration(float quality, double intensity) {
-		int minDuration = durationRange.getMinimumInteger();
-		int maxDuration = durationRange.getMaximumInteger();
-		return (int) Math.round((minDuration + ((maxDuration - minDuration) * (quality / 10.0))) * intensity);
-	}
-
-	public int getLevel(float quality) {
-		int minLevel = levelRange.getMinimumInteger();
-		int maxLevel = levelRange.getMaximumInteger();
-		return (int) Math.round(minLevel + ((maxLevel - minLevel) * (quality / 10.0)));
-	}
-
-	public static void updateMeta(BrewEffect effect, PotionMeta meta, int quality) {
-		int duration = effect.getDuration(quality, 1.0D);
-		int level = effect.getLevel(quality);
-		if ((duration > 0 || effect.type.isInstant()) && level > 0) {
-			meta.addCustomEffect(effect.type.createEffect(0, 0), true);
-		} else {
-			meta.removeCustomEffect(effect.type);
-		}
-	}
-
-	public boolean isValid() {
-		int minLevel = levelRange.getMinimumInteger();
-		int maxLevel = levelRange.getMaximumInteger();
-		int minDuration = durationRange.getMinimumInteger();
-		int maxDuration = durationRange.getMaximumInteger();
-		return type != null && minLevel >= 0 && maxLevel >= 0 && minDuration >= 0 && maxDuration >= 0;
 	}
 }
