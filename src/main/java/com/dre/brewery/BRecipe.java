@@ -96,8 +96,8 @@ public class BRecipe {
 		List<String> effectStringList = configSectionRecipes.getStringList(recipeId + ".effects");
 		if (effectStringList != null) {
 			for (String effectString : effectStringList) {
-				BEffect effect = new BEffect(effectString);
-				if (effect.isValid()) {
+				BEffect effect = BEffect.parse(effectString);
+				if (effect != null && effect.isValid()) {
 					effects.add(effect);
 				} else {
 					BreweryPlugin.instance.errorLog("Error adding Effect to Recipe: " + getName(5));
