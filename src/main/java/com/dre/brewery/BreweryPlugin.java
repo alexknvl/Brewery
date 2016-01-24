@@ -151,9 +151,6 @@ public class BreweryPlugin extends JavaPlugin {
 		// delete Data from Ram
 		Barrel.barrels.clear();
 		CauldronWrapper.bcauldrons.clear();
-		possibleIngredients.clear();
-		recipes.clear();
-		cookedNames.clear();
 		PlayerWrapper.clear();
 		Brew.potions.clear();
 		Wakeup.wakeups.clear();
@@ -171,11 +168,7 @@ public class BreweryPlugin extends JavaPlugin {
 	
 	public void reload(CommandSender sender) {
 		// clear all existent config Data
-		possibleIngredients.clear();
-		recipes.clear();
-		cookedNames.clear();
 		DrunkTextEffect.words.clear();
-		drainItems.clear();
 		if (useLB) {
 			try {
 				LogBlockBarrel.clear();
