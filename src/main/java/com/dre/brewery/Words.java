@@ -66,7 +66,7 @@ public class Words {
 		}
 	}
 
-	private static boolean loadWords() {
+	public static boolean loadWords() {
 		if (words.isEmpty()) {
 			// load when first drunk player talks
 			load();
@@ -99,27 +99,6 @@ public class Words {
 							}
 						}
 					}
-				}
-			}
-		}
-	}
-
-	// Distort players words when he uses a command
-	public static void signWrite(SignChangeEvent event) {
-		BPlayer bPlayer = BPlayer.get(event.getPlayer());
-		if (bPlayer != null) {
-			if (loadWords()) {
-				int index = 0;
-				for (String message : event.getLines()) {
-					if (message.length() > 1) {
-						message = distortMessage(message, bPlayer.getDrunkeness());
-
-						if (message.length() > 15) {
-							message = message.substring(0, 14);
-						}
-						event.setLine(index, message);
-					}
-					index++;
 				}
 			}
 		}

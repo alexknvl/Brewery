@@ -37,8 +37,20 @@ public class BlockListener implements Listener {
 	@EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
 	public void onSignChangeLow(SignChangeEvent event) {
 		if (Words.doSigns) {
-			if (BPlayer.hasPlayer(event.getPlayer())) {
-				Words.signWrite(event);
+			BPlayer bPlayer = BPlayer.get(event.getPlayer());
+			if (bPlayer != null) {
+				int index = 0;
+				for (String message : event.getLines()) {
+					if (message.length() > 1) {
+						message = Words.distortMessage(message, bPlayer.getDrunkeness());
+
+						if (message.length() > 15) {
+							message = message.substring(0, 14);
+						}
+						event.setLine(index, message);
+					}
+					index++;
+				}
 			}
 		}
 	}

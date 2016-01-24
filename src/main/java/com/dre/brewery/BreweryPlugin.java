@@ -110,6 +110,8 @@ public class BreweryPlugin extends JavaPlugin {
 			instance.getServer().getScheduler().runTaskLaterAsynchronously(instance, new UpdateChecker(), 135);
 		}
 
+		Words.loadWords();
+
 		this.log(this.getDescription().getName() + " enabled!");
 	}
 
