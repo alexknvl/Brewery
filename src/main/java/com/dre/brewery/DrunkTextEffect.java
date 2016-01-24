@@ -13,7 +13,7 @@ public class DrunkTextEffect {
 	public static ArrayList<DrunkTextEffect> words = new ArrayList<DrunkTextEffect>();
 	public static List<String> commands;
 	public static List<String[]> ignoreText = new ArrayList<String[]>();
-	public static Boolean log;
+	public static Boolean logMessages;
 
 	private String from;
 	private String to;

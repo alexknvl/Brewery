@@ -279,7 +279,7 @@ public class BreweryPlugin extends JavaPlugin {
 		Brew.colorInBarrels = config.getBoolean("colorInBarrels", false);
 		Brew.colorInBrewer = config.getBoolean("colorInBrewer", false);
 		PlayerListener.openEverywhere = config.getBoolean("openLargeBarrelEverywhere", false);
-		DrunkTextEffect.log = config.getBoolean("logRealChat", false);
+		DrunkTextEffect.logMessages = config.getBoolean("logRealChat", false);
 		DrunkTextEffect.commands = config.getStringList("distortCommands");
 		doSigns = config.getBoolean("distortSignText", false);
 		for (String bypass : config.getStringList("distortBypass")) {
