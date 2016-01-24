@@ -24,3 +24,8 @@
 
 # maven
 /target
+
+# extra
+/lib
+/test-server
+/project/target
