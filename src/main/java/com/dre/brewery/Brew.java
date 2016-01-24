@@ -562,7 +562,7 @@ public class Brew {
 		if (effects != null) {
 			for (BrewEffect effect : effects) {
 				if (!effect.isHidden()) {
-					effect.writeInto(meta, quality);
+					BrewEffect.updateMeta(effect, meta, quality);
 				}
 			}
 		}

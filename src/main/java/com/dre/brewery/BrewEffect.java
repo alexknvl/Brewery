@@ -87,36 +87,38 @@ public class BrewEffect {
 		}
 	}
 
-	public void apply(int quality, Player player, double intensity) {
-		int duration = (int) (calcDuration(quality) * intensity);
-		int lvl = calcLvl(quality);
+	public static void apply(BrewEffect effect, int quality, Player player, double intensity) {
+		int duration = effect.getDuration(quality, intensity);
+		int lvl = effect.getLevel(quality);
 
-		if (lvl < 1 || (duration < 1 && !type.isInstant())) {
+		if (lvl <= 0 || (duration <= 0 && !effect.type.isInstant())) {
 			return;
 		}
 
 		duration *= 20;
-		duration /= type.getDurationModifier();
-		type.createEffect(duration, lvl - 1).apply(player);
+		duration /= effect.type.getDurationModifier();
+		effect.type.createEffect(duration, lvl - 1).apply(player);
 	}
 
-	public int calcDuration(float quality) {
+	public int getDuration(float quality, double intensity) {
 		int minDuration = durationRange.getMinimumInteger();
 		int maxDuration = durationRange.getMaximumInteger();
-		return (int) Math.round(minDuration + ((maxDuration - minDuration) * (quality / 10.0)));
+		return (int) Math.round((minDuration + ((maxDuration - minDuration) * (quality / 10.0))) * intensity);
 	}
 
-	public int calcLvl(float quality) {
+	public int getLevel(float quality) {
 		int minLevel = levelRange.getMinimumInteger();
 		int maxLevel = levelRange.getMaximumInteger();
 		return (int) Math.round(minLevel + ((maxLevel - minLevel) * (quality / 10.0)));
 	}
 
-	public void writeInto(PotionMeta meta, int quality) {
-		if ((calcDuration(quality) > 0 || type.isInstant()) && calcLvl(quality) > 0) {
-			meta.addCustomEffect(type.createEffect(0, 0), true);
+	public static void updateMeta(BrewEffect effect, PotionMeta meta, int quality) {
+		int duration = effect.getDuration(quality, 1.0D);
+		int level = effect.getLevel(quality);
+		if ((duration > 0 || effect.type.isInstant()) && level > 0) {
+			meta.addCustomEffect(effect.type.createEffect(0, 0), true);
 		} else {
-			meta.removeCustomEffect(type);
+			meta.removeCustomEffect(effect.type);
 		}
 	}
 

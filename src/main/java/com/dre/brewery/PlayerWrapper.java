@@ -468,7 +468,7 @@ public class PlayerWrapper {
 		ImmutableList<BrewEffect> effects = brew.getEffects();
 		if (effects != null) {
 			for (BrewEffect effect : effects) {
-				effect.apply(brew.getQuality(), player, intensity);
+				BrewEffect.apply(effect, brew.getQuality(), player, intensity);
 			}
 		}
 	}
