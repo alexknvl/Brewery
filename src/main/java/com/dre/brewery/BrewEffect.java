@@ -6,10 +6,10 @@ import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.potion.PotionEffectType;
 
 public class BrewEffect {
-	private final PotionEffectType type;
-	private final IntRange levelRange;
-	private final IntRange durationRange;
-	private final boolean hidden;
+	public final PotionEffectType type;
+	public final IntRange levelRange;
+	public final IntRange durationRange;
+	public final boolean hidden;
 
 	public BrewEffect(PotionEffectType type, IntRange levelRange, IntRange durationRange, boolean hidden) {
 		this.type = type;
@@ -128,9 +128,5 @@ public class BrewEffect {
 		int minDuration = durationRange.getMinimumInteger();
 		int maxDuration = durationRange.getMaximumInteger();
 		return type != null && minLevel >= 0 && maxLevel >= 0 && minDuration >= 0 && maxDuration >= 0;
-	}
-
-	public boolean isHidden() {
-		return hidden;
 	}
 }

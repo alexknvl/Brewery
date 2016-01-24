@@ -561,7 +561,7 @@ public class Brew {
 	public static void addOrReplaceEffects(PotionMeta meta, ImmutableList<BrewEffect> effects, int quality) {
 		if (effects != null) {
 			for (BrewEffect effect : effects) {
-				if (!effect.isHidden()) {
+				if (!effect.hidden) {
 					BrewEffect.updateMeta(effect, meta, quality);
 				}
 			}
