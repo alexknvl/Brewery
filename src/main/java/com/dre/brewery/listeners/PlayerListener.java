@@ -216,7 +216,7 @@ public class PlayerListener implements Listener {
 		BPlayer bPlayer = BPlayer.get(event.getPlayer());
 		if (bPlayer != null) {
 			String message = event.getMessage();
-			if (DrunkTextEffect.logMessages) {
+			if (BreweryPlugin.logMessages) {
 				BreweryPlugin.instance.log(BreweryPlugin.instance.languageReader.get("Player_TriedToSay", event.getPlayer().getName(), message));
 			}
 			event.setMessage(DrunkTextEffect.distortMessage(message, bPlayer.getDrunkeness()));
@@ -235,7 +235,7 @@ public class PlayerListener implements Listener {
 					if (command.length() + 1 < chat.length()) {
 						if (Character.isSpaceChar(chat.charAt(command.length()))) {
 							if (chat.toLowerCase().startsWith(command.toLowerCase())) {
-								if (DrunkTextEffect.logMessages) {
+								if (BreweryPlugin.logMessages) {
 									BreweryPlugin.instance.log(BreweryPlugin.instance.languageReader.get("Player_TriedToSay", name, chat));
 								}
 								String message = chat.substring(command.length() + 1);
