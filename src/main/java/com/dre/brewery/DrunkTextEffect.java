@@ -11,7 +11,6 @@ public class DrunkTextEffect {
 	// represends Words and letters, that are replaced in drunk players messages
 
 	public static ArrayList<DrunkTextEffect> words = new ArrayList<DrunkTextEffect>();
-	public static List<String> commands;
 	public static List<String[]> ignoreText = new ArrayList<String[]>();
 
 	private String from;

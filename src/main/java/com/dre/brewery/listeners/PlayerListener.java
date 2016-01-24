@@ -223,15 +223,15 @@ public class PlayerListener implements Listener {
 		}
 	}
 	
-	// player commands while drunk, distort chat commands
+	// player distortCommands while drunk, distort chat distortCommands
 	@EventHandler(priority = EventPriority.LOWEST)
 	public void onCommandPreProcess(PlayerCommandPreprocessEvent event) {
 		BPlayer bPlayer = BPlayer.get(event.getPlayer());
 		if (bPlayer != null) {
-			if (!DrunkTextEffect.commands.isEmpty()) {
+			if (!BreweryPlugin.distortCommands.isEmpty()) {
 				String name = event.getPlayer().getName();
 				String chat = event.getMessage();
-				for (String command : DrunkTextEffect.commands) {
+				for (String command : BreweryPlugin.distortCommands) {
 					if (command.length() + 1 < chat.length()) {
 						if (Character.isSpaceChar(chat.charAt(command.length()))) {
 							if (chat.toLowerCase().startsWith(command.toLowerCase())) {
