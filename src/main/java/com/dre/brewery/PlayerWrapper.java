@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.UUID;
 
+import com.google.common.collect.ImmutableList;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.entity.Player;
@@ -464,7 +465,7 @@ public class PlayerWrapper {
 	}
 
 	public static void addBrewEffects(Brew brew, Player player, double intensity) {
-		ArrayList<BrewEffect> effects = brew.getEffects();
+		ImmutableList<BrewEffect> effects = brew.getEffects();
 		if (effects != null) {
 			for (BrewEffect effect : effects) {
 				effect.apply(brew.getQuality(), player, intensity);

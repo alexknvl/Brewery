@@ -3,6 +3,7 @@ package com.dre.brewery;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.google.common.collect.ImmutableList;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
@@ -10,21 +11,23 @@ import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.potion.PotionEffectType;
 
 public class BrewRecipe {
-	private final String[] name;
-	private final ArrayList<ItemStack> ingredients;// material and amount
-	private final int cookingTime;// time to cook in cauldron
-	private final int distillRuns;// runs through the brewer
-	private final byte wood;// type of wood the barrel has to consist of
-	private final int age;// time in minecraft days for the potions to age in barrels
-	private final String color;// color of the destilled/finished potion
-	private final int difficulty;// difficulty to brew the potion, how exact the instruction has to be followed
-	private final int alcohol;// Alcohol in perfect potion
-	private final boolean splashable;
-	private final ArrayList<BrewEffect> effects; // Special Effects when drinking
+	public final ImmutableList<String> names;
+	public final ImmutableList<ItemStack> ingredients;// material and amount
+	public final int cookingTime;// time to cook in cauldron
+	public final int distillRuns;// runs through the brewer
+	public final byte wood;// type of wood the barrel has to consist of
+	public final int age;// time in minecraft days for the potions to age in barrels
+	public final String color;// color of the destilled/finished potion
+	public final int difficulty;// difficulty to brew the potion, how exact the instruction has to be followed
+	public final int alcohol;// Alcohol in perfect potion
+	public final boolean splashable;
+	public final ImmutableList<BrewEffect> effects; // Special Effects when drinking
 
-	public BrewRecipe(String[] name, ArrayList<ItemStack> ingredients, int cookingTime, int distillRuns, byte wood,
-					  int age, String color, int difficulty, int alcohol, boolean splashable, ArrayList<BrewEffect> effects) {
-		this.name = name;
+	public BrewRecipe(ImmutableList<String> names, ImmutableList<ItemStack> ingredients,
+					  int cookingTime, int distillRuns, byte wood,
+					  int age, String color, int difficulty, int alcohol, boolean splashable,
+					  ImmutableList<BrewEffect> effects) {
+		this.names = names;
 		this.ingredients = ingredients;
 		this.cookingTime = cookingTime;
 		this.distillRuns = distillRuns;
@@ -39,14 +42,13 @@ public class BrewRecipe {
 
 	public static BrewRecipe read(ConfigurationSection configSectionRecipes, String recipeId) {
 		String nameList = configSectionRecipes.getString(recipeId + ".name");
-		String[] names;
+		final ImmutableList<String> names;
 		if (nameList != null) {
 			String[] name = nameList.split("/");
 			if (name.length > 2) {
-				names = name;
+				names = ImmutableList.copyOf(name);
 			} else {
-				names = new String[1];
-				names[0] = name[0];
+				names = ImmutableList.of(name[0]);
 			}
 		} else {
 			return null;
@@ -117,13 +119,13 @@ public class BrewRecipe {
 				if (effect != null && effect.isValid()) {
 					effects.add(effect);
 				} else {
-					BreweryPlugin.instance.errorLog("Error adding Effect to Recipe: " + names[0]);
+					BreweryPlugin.instance.errorLog("Error adding Effect to Recipe: " + names.get(0));
 				}
 			}
 		}
 
-		return new BrewRecipe(names, ingredients, cookingTime, distillruns, wood, age, color, difficulty,
-				alcohol, splashable, effects);
+		return new BrewRecipe(names, ImmutableList.copyOf(ingredients), cookingTime, distillruns, wood,
+				age, color, difficulty, alcohol, splashable, ImmutableList.copyOf(effects));
 	}
 
 	// allowed deviation to the recipes count of ingredients at the given difficulty
@@ -245,7 +247,7 @@ public class BrewRecipe {
 
 	// true if name and ingredients are correct
 	public boolean isValid() {
-		return (name != null && ingredients != null && !ingredients.isEmpty());
+		return (ingredients != null && !ingredients.isEmpty());
 	}
 
 
@@ -263,22 +265,22 @@ public class BrewRecipe {
 
 	// name that fits the quality
 	public String getName(int quality) {
-		if (name.length > 2) {
+		if (names.size() > 2) {
 			if (quality <= 3) {
-				return name[0];
+				return names.get(0);
 			} else if (quality <= 7) {
-				return name[1];
+				return names.get(1);
 			} else {
-				return name[2];
+				return names.get(2);
 			}
 		} else {
-			return name[0];
+			return names.get(0);
 		}
 	}
 
 	// If one of the quality names equalIgnoreCase given name
 	public boolean hasName(String name) {
-		for (String test : this.name) {
+		for (String test : this.names) {
 			if (test.equalsIgnoreCase(name)) {
 				return true;
 			}
@@ -318,7 +320,7 @@ public class BrewRecipe {
 		return alcohol;
 	}
 
-	public ArrayList<BrewEffect> getEffects() {
+	public ImmutableList<BrewEffect> getEffects() {
 		return effects;
 	}
 

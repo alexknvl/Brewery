@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.google.common.collect.ImmutableList;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
@@ -253,7 +254,7 @@ public class Brew {
 	}
 
 	// return special effect
-	public ArrayList<BrewEffect> getEffects() {
+	public ImmutableList<BrewEffect> getEffects() {
 		if (currentRecipe != null && quality > 0) {
 			return currentRecipe.getEffects();
 		}
@@ -557,7 +558,7 @@ public class Brew {
 	}
 
 	// Adds the Effect names to the Items description
-	public static void addOrReplaceEffects(PotionMeta meta, ArrayList<BrewEffect> effects, int quality) {
+	public static void addOrReplaceEffects(PotionMeta meta, ImmutableList<BrewEffect> effects, int quality) {
 		if (effects != null) {
 			for (BrewEffect effect : effects) {
 				if (!effect.isHidden()) {
