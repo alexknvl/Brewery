@@ -13,47 +13,37 @@ public class DrunkTextEffect {
 	public static ArrayList<DrunkTextEffect> words = new ArrayList<DrunkTextEffect>();
 	public static List<String[]> ignoreText = new ArrayList<String[]>();
 
-	private String from;
-	private String to;
-	private String[] pre;
-	private Boolean match = false;
-	private int alcohol = 1;
-	private int percentage = 100;
+	private final String from;
+	private final String to;
+	private final String[] pre;
+	private final Boolean match;
+	private final int alcohol;
+	private final int percentage;
 
-	public DrunkTextEffect(Map<?, ?> part) {
-		for (Map.Entry<?, ?> wordPart : part.entrySet()) {
-			String key = (String) wordPart.getKey();
+	public DrunkTextEffect(Map<?, ?> map) {
+		if (map.containsKey("replace") && map.get("replace") instanceof String)
+			from = (String) map.get("replace");
+		else from = null;
 
-			if (wordPart.getValue() instanceof String) {
+		if (map.containsKey("to") && map.get("to") instanceof String)
+			to = (String) map.get("to");
+		else to = null;
 
-				if (key.equalsIgnoreCase("replace")) {
-					this.from = (String) wordPart.getValue();
-				} else if (key.equalsIgnoreCase("to")) {
-					this.to = (String) wordPart.getValue();
-				} else if (key.equalsIgnoreCase("pre")) {
-					String fullPre = (String) wordPart.getValue();
-					this.pre = fullPre.split(",");
-				}
+		if (map.containsKey("pre") && map.get("pre") instanceof String)
+			pre = ((String) map.get("pre")).split(",");
+		else pre = null;
 
-			} else if (wordPart.getValue() instanceof Boolean) {
+		if (map.containsKey("match") && map.get("match") instanceof Boolean)
+			match = (Boolean) map.get("match");
+		else match = false;
 
-				if (key.equalsIgnoreCase("match")) {
-					this.match = (Boolean) wordPart.getValue();
-				}
+		if (map.containsKey("alcohol") && map.get("alcohol") instanceof Integer)
+			alcohol = (Integer) map.get("alcohol");
+		else alcohol = 1;
 
-			} else if (wordPart.getValue() instanceof Integer) {
-
-				if (key.equalsIgnoreCase("alcohol")) {
-					this.alcohol = (Integer) wordPart.getValue();
-				} else if (key.equalsIgnoreCase("percentage")) {
-					this.percentage = (Integer) wordPart.getValue();
-				}
-
-			}
-		}
-		if (this.from != null && this.to != null) {
-			words.add(this);
-		}
+		if (map.containsKey("percentage") && map.get("percentage") instanceof Integer)
+			percentage = (Integer) map.get("percentage");
+		else percentage = 100;
 	}
 
 	public static boolean loadWords(FileConfiguration config) {
@@ -61,7 +51,10 @@ public class DrunkTextEffect {
 			// load when first drunk player talks
 			if (config != null) {
                 for (Map<?, ?> map : config.getMapList("words")) {
-                    new DrunkTextEffect(map);
+                    DrunkTextEffect effect = new DrunkTextEffect(map);
+					if (effect.from != null && effect.to != null) {
+						words.add(effect);
+					}
                 }
             }
 		}
