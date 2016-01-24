@@ -202,7 +202,7 @@ public class Brew {
 		}
 
 		if (currentRecipe != null) {
-			int alc = currentRecipe.getAlcohol();
+			int alc = currentRecipe.alcohol;
 			if (currentRecipe.needsDistilling()) {
 				if (distillRuns == 0) {
 					return 0;
@@ -211,7 +211,7 @@ public class Brew {
 				alc *= 1 - ((float) (10 - quality) * 0.04);
 				// distillable Potions should have half alc after one and full alc after all needed distills
 				alc /= 2;
-				alc *= 1.0F + ((float) distillRuns / currentRecipe.getDistillRuns()) ;
+				alc *= 1.0F + ((float) distillRuns / currentRecipe.distillRuns) ;
 			} else {
 				// quality decides 10% - 100%
 				alc *= ((float) quality / 10.0);
@@ -241,12 +241,12 @@ public class Brew {
 	}
 
 	public boolean isSplashable() {
-		return currentRecipe.isSplashable();
+		return currentRecipe.splashable;
 	}
 
 	public boolean canDistill() {
 		if (currentRecipe != null) {
-			return currentRecipe.getDistillRuns() > distillRuns;
+			return currentRecipe.distillRuns > distillRuns;
 		} else if (distillRuns >= 6) {
 			return false;
 		}
@@ -256,7 +256,7 @@ public class Brew {
 	// return special effect
 	public ImmutableList<BrewEffect> getEffects() {
 		if (currentRecipe != null && quality > 0) {
-			return currentRecipe.getEffects();
+			return currentRecipe.effects;
 		}
 		return null;
 	}
@@ -523,7 +523,7 @@ public class Brew {
 
 	// updates/sets the color on WoodLore
 	public void updateWoodLore(PotionMeta meta) {
-		if (currentRecipe.getWood() > 0) {
+		if (currentRecipe.wood > 0) {
 			int quality = ingredients.getWoodQuality(currentRecipe, wood);
 			addOrReplaceLore(meta, getQualityColor(quality), BreweryPlugin.instance.languageReader.get("Brew_Woodtype"));
 		} else {

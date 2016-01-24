@@ -171,10 +171,6 @@ public class BrewRecipe {
 		return age != 0;
 	}
 
-	public boolean isSplashable() {
-		return splashable;
-	}
-
 	// true if given list misses an ingredient
 	public boolean isMissingIngredients(List<ItemStack> list) {
 		if (list.size() < ingredients.size()) {
@@ -231,7 +227,7 @@ public class BrewRecipe {
 
 		BIngredients bIngredients = new BIngredients(list, cookingTime);
 
-		Brew brew = new Brew(uid, bIngredients, quality, distillRuns, getAge(), wood, getName(5), false, false, true);
+		Brew brew = new Brew(uid, bIngredients, quality, distillRuns, (float) age, wood, getName(5), false, false, true);
 
 		potion.setDurability(Brew.PotionColor.valueOf(getColor()).getColorId(false));
 		potionMeta.setDisplayName(BreweryPlugin.instance.color("&f" + getName(quality)));
@@ -288,40 +284,11 @@ public class BrewRecipe {
 		return false;
 	}
 
-	public int getCookingTime() {
-		return cookingTime;
-	}
-
-	public int getDistillRuns() {
-		return distillRuns;
-	}
-
 	public String getColor() {
 		if (color != null) {
 			return color.toUpperCase();
 		}
 		return "BLUE";
-	}
-
-	// get the woodtype
-	public byte getWood() {
-		return wood;
-	}
-
-	public float getAge() {
-		return (float) age;
-	}
-
-	public int getDifficulty() {
-		return difficulty;
-	}
-
-	public int getAlcohol() {
-		return alcohol;
-	}
-
-	public ImmutableList<BrewEffect> getEffects() {
-		return effects;
 	}
 
 }

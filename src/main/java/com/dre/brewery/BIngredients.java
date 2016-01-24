@@ -253,7 +253,7 @@ public class BIngredients {
 				badStuff++;
 				if (badStuff < ingredients.size()) {
 					// when there are other ingredients
-					quality -= count * (recipe.getDifficulty() / 2);
+					quality -= count * (recipe.difficulty / 2);
 					continue;
 				} else {
 					// ingredients dont fit at all
@@ -274,7 +274,7 @@ public class BIngredients {
 		if (!recipe.needsDistilling() == distilled) {
 			return -1;
 		}
-		int quality = 10 - (int) Math.round(((float) Math.abs(cookedTime - recipe.getCookingTime()) / recipe.allowedTimeDiff(recipe.getCookingTime())) * 10.0);
+		int quality = 10 - (int) Math.round(((float) Math.abs(cookedTime - recipe.cookingTime) / recipe.allowedTimeDiff(recipe.cookingTime)) * 10.0);
 
 		if (quality >= 0) {
 			if (cookedTime <= 1) {
@@ -290,16 +290,16 @@ public class BIngredients {
 		if (recipe.needsDistilling() != distillRuns > 0) {
 			return 0;
 		}
-		return 10 - Math.abs(recipe.getDistillRuns() - distillRuns);
+		return 10 - Math.abs(recipe.distillRuns - distillRuns);
 	}
 
 	// returns the quality regarding the barrel wood conditioning given Recipe
 	public int getWoodQuality(BrewRecipe recipe, float wood) {
-		if (recipe.getWood() == 0) {
+		if (recipe.wood == 0) {
 			// type of wood doesnt matter
 			return 10;
 		}
-		int quality = 10 - Math.round(recipe.getWoodDiff(wood) * recipe.getDifficulty());
+		int quality = 10 - Math.round(recipe.getWoodDiff(wood) * recipe.difficulty);
 
 		if (quality > 0) {
 			return quality;
@@ -309,7 +309,7 @@ public class BIngredients {
 
 	// returns the quality regarding the ageing time conditioning given Recipe
 	public int getAgeQuality(BrewRecipe recipe, float time) {
-		int quality = 10 - Math.round(Math.abs(time - recipe.getAge()) * ((float) recipe.getDifficulty() / 2));
+		int quality = 10 - Math.round(Math.abs(time - (float) recipe.age) * ((float) recipe.difficulty / 2));
 
 		if (quality > 0) {
 			return quality;
