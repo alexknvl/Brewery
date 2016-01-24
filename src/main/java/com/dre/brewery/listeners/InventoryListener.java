@@ -1,6 +1,7 @@
 package com.dre.brewery.listeners;
 
 import com.dre.brewery.BreweryPlugin;
+import com.dre.brewery.PotionColor;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -57,8 +58,8 @@ public class InventoryListener implements Listener {
 				Brew brew = Brew.get(id);
 				if (brew == null) continue;
 
-				if (brew.isSplashable() && (item.getDurability() & 8192) == 8192) {
-					item.setDurability((short)(item.getDurability() + 8192));
+				if (brew.isSplashable()) {
+					item.setDurability(PotionColor.toSplashPotion(item.getDurability()));
 					success = true;
 				}
 			}
