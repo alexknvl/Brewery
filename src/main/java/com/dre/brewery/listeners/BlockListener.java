@@ -2,6 +2,7 @@ package com.dre.brewery.listeners;
 
 import com.dre.brewery.BreweryPlugin;
 import com.dre.brewery.DrunkTextEffect;
+import com.dre.brewery.PlayerWrapper;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -14,7 +15,6 @@ import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.block.BlockBreakEvent;
 
 import com.dre.brewery.Barrel;
-import com.dre.brewery.BPlayer;
 
 public class BlockListener implements Listener {
 
@@ -37,12 +37,12 @@ public class BlockListener implements Listener {
 	@EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
 	public void onSignChangeLow(SignChangeEvent event) {
 		if (BreweryPlugin.doSigns) {
-			BPlayer bPlayer = BPlayer.get(event.getPlayer());
-			if (bPlayer != null) {
+			PlayerWrapper playerWrapper = PlayerWrapper.get(event.getPlayer());
+			if (playerWrapper != null) {
 				int index = 0;
 				for (String message : event.getLines()) {
 					if (message.length() > 1) {
-						message = DrunkTextEffect.distortMessage(message, bPlayer.getDrunkeness());
+						message = DrunkTextEffect.distortMessage(message, playerWrapper.getDrunkeness());
 
 						if (message.length() > 15) {
 							message = message.substring(0, 14);

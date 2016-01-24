@@ -3,18 +3,14 @@ package com.dre.brewery.filedata;
 
 import java.io.File;
 
+import com.dre.brewery.*;
 import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import com.dre.brewery.CauldronWrapper;
-import com.dre.brewery.BPlayer;
-import com.dre.brewery.Barrel;
-import com.dre.brewery.Brew;
-import com.dre.brewery.BreweryPlugin;
-import com.dre.brewery.Wakeup;
+import com.dre.brewery.PlayerWrapper;
 
 public class DataSave extends BukkitRunnable {
 
@@ -71,8 +67,8 @@ public class DataSave extends BukkitRunnable {
 			Barrel.save(configFile.createSection("Barrel"), oldData.getConfigurationSection("Barrel"));
 		}
 
-		if (!BPlayer.isEmpty()) {
-			BPlayer.save(configFile.createSection("Player"));
+		if (!PlayerWrapper.isEmpty()) {
+			PlayerWrapper.save(configFile.createSection("Player"));
 		}
 
 		if (!Wakeup.wakeups.isEmpty() || oldData.contains("Wakeup")) {

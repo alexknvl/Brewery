@@ -141,7 +141,7 @@ public class BreweryPlugin extends JavaPlugin {
 		BIngredients.possibleIngredients.clear();
 		BIngredients.recipes.clear();
 		BIngredients.cookedNames.clear();
-		BPlayer.clear();
+		PlayerWrapper.clear();
 		Brew.potions.clear();
 		Wakeup.wakeups.clear();
 		DrunkTextEffect.words.clear();
@@ -162,7 +162,7 @@ public class BreweryPlugin extends JavaPlugin {
 		BIngredients.recipes.clear();
 		BIngredients.cookedNames.clear();
 		DrunkTextEffect.words.clear();
-		BPlayer.drainItems.clear();
+		PlayerWrapper.drainItems.clear();
 		if (useLB) {
 			try {
 				LogBlockBarrel.clear();
@@ -271,13 +271,13 @@ public class BreweryPlugin extends JavaPlugin {
 		// various Settings
 		DataSave.autosave = config.getInt("autosave", 3);
 		debug = config.getBoolean("debug", false);
-		BPlayer.pukeItem = Material.matchMaterial(config.getString("pukeItem", "SOUL_SAND"));
-		BPlayer.hangoverTime = config.getInt("hangoverDays", 0) * 24 * 60;
-		BPlayer.overdrinkKick = config.getBoolean("enableKickOnOverdrink", false);
-		BPlayer.enableHome = config.getBoolean("enableHome", false);
-		BPlayer.enableLoginDisallow = config.getBoolean("enableLoginDisallow", false);
-		BPlayer.enablePuke = config.getBoolean("enablePuke", false);
-		BPlayer.homeType = config.getString("homeType", null);
+		PlayerWrapper.pukeItem = Material.matchMaterial(config.getString("pukeItem", "SOUL_SAND"));
+		PlayerWrapper.hangoverTime = config.getInt("hangoverDays", 0) * 24 * 60;
+		PlayerWrapper.overdrinkKick = config.getBoolean("enableKickOnOverdrink", false);
+		PlayerWrapper.enableHome = config.getBoolean("enableHome", false);
+		PlayerWrapper.enableLoginDisallow = config.getBoolean("enableLoginDisallow", false);
+		PlayerWrapper.enablePuke = config.getBoolean("enablePuke", false);
+		PlayerWrapper.homeType = config.getString("homeType", null);
 		Brew.colorInBarrels = config.getBoolean("colorInBarrels", false);
 		Brew.colorInBrewer = config.getBoolean("colorInBrewer", false);
 		PlayerListener.openEverywhere = config.getBoolean("openLargeBarrelEverywhere", false);
@@ -346,7 +346,7 @@ public class BreweryPlugin extends JavaPlugin {
 						}
 					}
 					if (mat != null && strength > 0) {
-						BPlayer.drainItems.put(mat, strength);
+						PlayerWrapper.drainItems.put(mat, strength);
 					}
 				}
 			}
@@ -432,7 +432,7 @@ public class BreweryPlugin extends JavaPlugin {
 					int offDrunk = section.getInt(name + ".offDrunk", 0);
 					boolean passedOut = section.getBoolean(name + ".passedOut", false);
 
-					new BPlayer(name, quality, drunk, offDrunk, passedOut);
+					new PlayerWrapper(name, quality, drunk, offDrunk, passedOut);
 				}
 			}
 
@@ -800,8 +800,8 @@ public class BreweryPlugin extends JavaPlugin {
 	public class DrunkRunnable implements Runnable {
 		@Override
 		public void run() {
-			if (!BPlayer.isEmpty()) {
-				BPlayer.drunkeness();
+			if (!PlayerWrapper.isEmpty()) {
+				PlayerWrapper.drunkeness();
 			}
 		}
 	}
@@ -813,7 +813,7 @@ public class BreweryPlugin extends JavaPlugin {
 				cauldron.onUpdate();// runs every min to update cooking time
 			}
 			Barrel.onUpdate();// runs every min to check and update ageing time
-			BPlayer.onUpdate();// updates players drunkeness
+			PlayerWrapper.onUpdate();// updates players drunkeness
 
 			debugLog("Update");
 

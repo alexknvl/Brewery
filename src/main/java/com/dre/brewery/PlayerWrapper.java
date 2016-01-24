@@ -18,8 +18,8 @@ import org.bukkit.Location;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.configuration.ConfigurationSection;
 
-public class BPlayer {
-	private static Map<String, BPlayer> players = new HashMap<String, BPlayer>();// Players name/uuid and BPlayer
+public class PlayerWrapper {
+	private static Map<String, PlayerWrapper> players = new HashMap<String, PlayerWrapper>();// Players name/uuid and BPlayer
 	private static Map<Player, Integer> pTasks = new HashMap<Player, Integer>();// Player and count
 	private static int taskId;
 
@@ -40,11 +40,11 @@ public class BPlayer {
 	private Vector push = new Vector(0, 0, 0);
 	private int time = 20;
 
-	public BPlayer() {
+	public PlayerWrapper() {
 	}
 
 	// reading from file
-	public BPlayer(String name, int quality, int drunkeness, int offlineDrunk, Boolean passedOut) {
+	public PlayerWrapper(String name, int quality, int drunkeness, int offlineDrunk, Boolean passedOut) {
 		this.quality = quality;
 		this.drunkeness = drunkeness;
 		this.offlineDrunk = offlineDrunk;
@@ -52,7 +52,7 @@ public class BPlayer {
 		players.put(name, this);
 	}
 
-	public static BPlayer get(Player player) {
+	public static PlayerWrapper get(Player player) {
 		if (!players.isEmpty()) {
 			return players.get(BreweryPlugin.playerString(player));
 		}
@@ -60,9 +60,9 @@ public class BPlayer {
 	}
 
 	// This method may be slow and should not be used if not needed
-	public static BPlayer getByName(String playerName) {
+	public static PlayerWrapper getByName(String playerName) {
 		if (BreweryPlugin.useUUID) {
-			for (Map.Entry<String, BPlayer> entry : players.entrySet()) {
+			for (Map.Entry<String, PlayerWrapper> entry : players.entrySet()) {
 				OfflinePlayer p = BreweryPlugin.instance.getServer().getOfflinePlayer(UUID.fromString(entry.getKey()));
 				if (p != null) {
 					String name = p.getName();
@@ -81,7 +81,7 @@ public class BPlayer {
 	// This method may be slow and should not be used if not needed
 	public static boolean hasPlayerbyName(String playerName) {
 		if (BreweryPlugin.useUUID) {
-			for (Map.Entry<String, BPlayer> entry : players.entrySet()) {
+			for (Map.Entry<String, PlayerWrapper> entry : players.entrySet()) {
 				OfflinePlayer p = BreweryPlugin.instance.getServer().getOfflinePlayer(UUID.fromString(entry.getKey()));
 				if (p != null) {
 					String name = p.getName();
@@ -106,10 +106,10 @@ public class BPlayer {
 	}
 
 	// Create a new BPlayer and add it to the list
-	public static BPlayer addPlayer(Player player) {
-		BPlayer bPlayer = new BPlayer();
-		players.put(BreweryPlugin.playerString(player), bPlayer);
-		return bPlayer;
+	public static PlayerWrapper addPlayer(Player player) {
+		PlayerWrapper playerWrapper = new PlayerWrapper();
+		players.put(BreweryPlugin.playerString(player), playerWrapper);
+		return playerWrapper;
 	}
 
 	public static void remove(Player player) {
@@ -117,7 +117,7 @@ public class BPlayer {
 	}
 
 	public void remove() {
-		for (Map.Entry<String, BPlayer> entry : players.entrySet()) {
+		for (Map.Entry<String, PlayerWrapper> entry : players.entrySet()) {
 			if (entry.getValue() == this) {
 				players.remove(entry.getKey());
 				return;
@@ -137,24 +137,24 @@ public class BPlayer {
 			addBrewEffects(brew, player, intensity);
 			return;
 		}
-		BPlayer bPlayer = get(player);
-		if (bPlayer == null) {
-			bPlayer = addPlayer(player);
+		PlayerWrapper playerWrapper = get(player);
+		if (playerWrapper == null) {
+			playerWrapper = addPlayer(player);
 		}
-		bPlayer.drunkeness += brewAlc;
+		playerWrapper.drunkeness += brewAlc;
 		if (brew.getQuality() > 0) {
-			bPlayer.quality += brew.getQuality() * brewAlc;
+			playerWrapper.quality += brew.getQuality() * brewAlc;
 		} else {
-			bPlayer.quality += brewAlc;
+			playerWrapper.quality += brewAlc;
 		}
 
-		if (bPlayer.drunkeness <= 100) {
+		if (playerWrapper.drunkeness <= 100) {
 
 			addBrewEffects(brew, player, intensity);
 			addQualityEffects(brew.getQuality(), brewAlc, player);
 
 		} else {
-			bPlayer.drinkCap(player);
+			playerWrapper.drinkCap(player);
 		}
 	}
 
@@ -177,9 +177,9 @@ public class BPlayer {
 
 	// push the player around if he moves
 	public static void playerMove(PlayerMoveEvent event) {
-		BPlayer bPlayer = get(event.getPlayer());
-		if (bPlayer != null) {
-			bPlayer.move(event);
+		PlayerWrapper playerWrapper = get(event.getPlayer());
+		if (playerWrapper != null) {
+			playerWrapper.move(event);
 		}
 	}
 
@@ -484,9 +484,9 @@ public class BPlayer {
 	// #### Sheduled ####
 
 	public static void drunkeness() {
-		for (Map.Entry<String, BPlayer> entry : players.entrySet()) {
+		for (Map.Entry<String, PlayerWrapper> entry : players.entrySet()) {
 			String name = entry.getKey();
-			BPlayer bplayer = entry.getValue();
+			PlayerWrapper bplayer = entry.getValue();
 
 			if (bplayer.drunkeness > 30) {
 				if (bplayer.offlineDrunk == 0) {
@@ -509,11 +509,11 @@ public class BPlayer {
 	public static void onUpdate() {
 		if (!players.isEmpty()) {
 			int soberPerMin = 2;
-			Iterator<Map.Entry<String, BPlayer>> iter = players.entrySet().iterator();
+			Iterator<Map.Entry<String, PlayerWrapper>> iter = players.entrySet().iterator();
 			while (iter.hasNext()) {
-				Map.Entry<String, BPlayer> entry = iter.next();
+				Map.Entry<String, PlayerWrapper> entry = iter.next();
 				String name = entry.getKey();
-				BPlayer bplayer = entry.getValue();
+				PlayerWrapper bplayer = entry.getValue();
 				if (bplayer.drunkeness == soberPerMin) {
 					// Prevent 0 drunkeness
 					soberPerMin++;
@@ -527,15 +527,15 @@ public class BPlayer {
 
 	// save all data
 	public static void save(ConfigurationSection config) {
-		for (Map.Entry<String, BPlayer> entry : players.entrySet()) {
+		for (Map.Entry<String, PlayerWrapper> entry : players.entrySet()) {
 			ConfigurationSection section = config.createSection(entry.getKey());
-			BPlayer bPlayer = entry.getValue();
-			section.set("quality", bPlayer.quality);
-			section.set("drunk", bPlayer.drunkeness);
-			if (bPlayer.offlineDrunk != 0) {
-				section.set("offDrunk", bPlayer.offlineDrunk);
+			PlayerWrapper playerWrapper = entry.getValue();
+			section.set("quality", playerWrapper.quality);
+			section.set("drunk", playerWrapper.drunkeness);
+			if (playerWrapper.offlineDrunk != 0) {
+				section.set("offDrunk", playerWrapper.offlineDrunk);
 			}
-			if (bPlayer.passedOut) {
+			if (playerWrapper.passedOut) {
 				section.set("passedOut", true);
 			}
 		}

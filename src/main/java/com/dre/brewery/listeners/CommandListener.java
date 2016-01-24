@@ -115,7 +115,7 @@ public class CommandListener implements CommandExecutor {
 
 		} else {
 
-			if (breweryPlugin.getServer().getPlayerExact(cmd) != null || BPlayer.hasPlayerbyName(cmd)) {
+			if (breweryPlugin.getServer().getPlayerExact(cmd) != null || PlayerWrapper.hasPlayerbyName(cmd)) {
 
 				if (args.length == 1) {
 					if (sender.hasPermission("brewery.cmd.infoOther")) {
@@ -287,38 +287,38 @@ public class CommandListener implements CommandExecutor {
 
 		String playerName = args[0];
 		Player player = BreweryPlugin.instance.getServer().getPlayerExact(playerName);
-		BPlayer bPlayer;
+		PlayerWrapper playerWrapper;
 		if (player == null) {
-			bPlayer = BPlayer.getByName(playerName);
+			playerWrapper = PlayerWrapper.getByName(playerName);
 		} else {
-			bPlayer = BPlayer.get(player);
+			playerWrapper = PlayerWrapper.get(player);
 		}
-		if (bPlayer == null && player != null) {
+		if (playerWrapper == null && player != null) {
 			if (drunkeness == 0) {
 				return;
 			}
-			bPlayer = BPlayer.addPlayer(player);
+			playerWrapper = PlayerWrapper.addPlayer(player);
 		}
-		if (bPlayer == null) {
+		if (playerWrapper == null) {
 			return;
 		}
 
 		if (drunkeness == 0) {
-			bPlayer.remove();
+			playerWrapper.remove();
 		} else {
-			bPlayer.setData(drunkeness, quality);
+			playerWrapper.setData(drunkeness, quality);
 		}
 
 		if (drunkeness > 100) {
 			if (player != null) {
-				bPlayer.drinkCap(player);
+				playerWrapper.drinkCap(player);
 			} else {
-				if (!BPlayer.overdrinkKick) {
-					bPlayer.setData(100, 0);
+				if (!PlayerWrapper.overdrinkKick) {
+					playerWrapper.setData(100, 0);
 				}
 			}
 		}
-		breweryPlugin.msg(sender, breweryPlugin.languageReader.get("CMD_Player", playerName, "" + drunkeness, "" + bPlayer.getQuality()));
+		breweryPlugin.msg(sender, breweryPlugin.languageReader.get("CMD_Player", playerName, "" + drunkeness, "" + playerWrapper.getQuality()));
 
 	}
 
@@ -335,16 +335,16 @@ public class CommandListener implements CommandExecutor {
 		}
 
 		Player player = BreweryPlugin.instance.getServer().getPlayerExact(playerName);
-		BPlayer bPlayer;
+		PlayerWrapper playerWrapper;
 		if (player == null) {
-			bPlayer = BPlayer.getByName(playerName);
+			playerWrapper = PlayerWrapper.getByName(playerName);
 		} else {
-			bPlayer = BPlayer.get(player);
+			playerWrapper = PlayerWrapper.get(player);
 		}
-		if (bPlayer == null) {
+		if (playerWrapper == null) {
 			breweryPlugin.msg(sender, breweryPlugin.languageReader.get("CMD_Info_NotDrunk", playerName));
 		} else {
-			breweryPlugin.msg(sender, breweryPlugin.languageReader.get("CMD_Info_Drunk", playerName, "" + bPlayer.getDrunkeness(), "" + bPlayer.getQuality()));
+			breweryPlugin.msg(sender, breweryPlugin.languageReader.get("CMD_Info_Drunk", playerName, "" + playerWrapper.getDrunkeness(), "" + playerWrapper.getQuality()));
 		}
 
 	}
