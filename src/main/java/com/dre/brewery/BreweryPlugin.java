@@ -110,8 +110,6 @@ public class BreweryPlugin extends JavaPlugin {
 			instance.getServer().getScheduler().runTaskLaterAsynchronously(instance, new UpdateChecker(), 135);
 		}
 
-		Words.loadWords();
-
 		this.log(this.getDescription().getName() + " enabled!");
 	}
 
@@ -352,7 +350,7 @@ public class BreweryPlugin extends JavaPlugin {
 		}
 
 		// telling Words the path, it will load it when needed
-		Words.config = config;
+		Words.loadWords(config);
 
 		return true;
 	}

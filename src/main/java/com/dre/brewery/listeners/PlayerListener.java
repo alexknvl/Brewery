@@ -215,13 +215,11 @@ public class PlayerListener implements Listener {
 	public void onPlayerChat(AsyncPlayerChatEvent event) {
 		BPlayer bPlayer = BPlayer.get(event.getPlayer());
 		if (bPlayer != null) {
-			if (Words.loadWords()) {
-				String message = event.getMessage();
-				if (Words.log) {
-					BreweryPlugin.instance.log(BreweryPlugin.instance.languageReader.get("Player_TriedToSay", event.getPlayer().getName(), message));
-				}
-				event.setMessage(Words.distortMessage(message, bPlayer.getDrunkeness()));
+			String message = event.getMessage();
+			if (Words.log) {
+				BreweryPlugin.instance.log(BreweryPlugin.instance.languageReader.get("Player_TriedToSay", event.getPlayer().getName(), message));
 			}
+			event.setMessage(Words.distortMessage(message, bPlayer.getDrunkeness()));
 		}
 	}
 	
@@ -230,7 +228,7 @@ public class PlayerListener implements Listener {
 	public void onCommandPreProcess(PlayerCommandPreprocessEvent event) {
 		BPlayer bPlayer = BPlayer.get(event.getPlayer());
 		if (bPlayer != null) {
-			if (!Words.commands.isEmpty() && Words.loadWords()) {
+			if (!Words.commands.isEmpty()) {
 				String name = event.getPlayer().getName();
 				if (!Words.waitPlayers.containsKey(name) || Words.waitPlayers.get(name) + 500 < System.currentTimeMillis()) {
 					String chat = event.getMessage();

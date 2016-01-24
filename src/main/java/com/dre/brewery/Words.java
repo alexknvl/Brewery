@@ -14,7 +14,6 @@ public class Words {
 	public static ArrayList<Words> words = new ArrayList<Words>();
 	public static List<String> commands;
 	public static List<String[]> ignoreText = new ArrayList<String[]>();
-	public static FileConfiguration config;
 	public static Boolean doSigns;
 	public static Boolean log;
 	public static Map<String, Long> waitPlayers = new HashMap<String, Long>();
@@ -62,7 +61,7 @@ public class Words {
 		}
 	}
 
-	public static boolean loadWords() {
+	public static boolean loadWords(FileConfiguration config) {
 		if (words.isEmpty()) {
 			// load when first drunk player talks
 			if (config != null) {
