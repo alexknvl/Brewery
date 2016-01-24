@@ -292,8 +292,8 @@ public class BreweryPlugin extends JavaPlugin {
 		ConfigurationSection configSection = config.getConfigurationSection("recipes");
 		if (configSection != null) {
 			for (String recipeId : configSection.getKeys(false)) {
-				BRecipe recipe = new BRecipe(configSection, recipeId);
-				if (recipe.isValid()) {
+				BRecipe recipe = BRecipe.read(configSection, recipeId);
+				if (recipe != null && recipe.isValid()) {
 					BIngredients.recipes.add(recipe);
 				} else {
 					errorLog("Loading the Recipe with id: '" + recipeId + "' failed!");

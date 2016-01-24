@@ -10,33 +10,50 @@ import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.potion.PotionEffectType;
 
 public class BRecipe {
+	private final String[] name;
+	private final ArrayList<ItemStack> ingredients;// material and amount
+	private final int cookingTime;// time to cook in cauldron
+	private final int distillruns;// runs through the brewer
+	private final byte wood;// type of wood the barrel has to consist of
+	private final int age;// time in minecraft days for the potions to age in barrels
+	private final String color;// color of the destilled/finished potion
+	private final int difficulty;// difficulty to brew the potion, how exact the instruction has to be followed
+	private final int alcohol;// Alcohol in perfect potion
+	private final boolean splashable;
+	private final ArrayList<BEffect> effects; // Special Effects when drinking
 
-	private String[] name;
-	private ArrayList<ItemStack> ingredients = new ArrayList<ItemStack>();// material and amount
-	private int cookingTime;// time to cook in cauldron
-	private int distillruns;// runs through the brewer
-	private byte wood;// type of wood the barrel has to consist of
-	private int age;// time in minecraft days for the potions to age in barrels
-	private String color;// color of the destilled/finished potion
-	private int difficulty;// difficulty to brew the potion, how exact the instruction has to be followed
-	private int alcohol;// Alcohol in perfect potion
-	private boolean splashable;
-	private ArrayList<BEffect> effects = new ArrayList<BEffect>(); // Special Effects when drinking
+	public BRecipe(String[] name, ArrayList<ItemStack> ingredients, int cookingTime, int distillruns, byte wood,
+				   int age, String color, int difficulty, int alcohol, boolean splashable, ArrayList<BEffect> effects) {
+		this.name = name;
+		this.ingredients = ingredients;
+		this.cookingTime = cookingTime;
+		this.distillruns = distillruns;
+		this.wood = wood;
+		this.age = age;
+		this.color = color;
+		this.difficulty = difficulty;
+		this.alcohol = alcohol;
+		this.splashable = splashable;
+		this.effects = effects;
+	}
 
-	public BRecipe(ConfigurationSection configSectionRecipes, String recipeId) {
+	public static BRecipe read(ConfigurationSection configSectionRecipes, String recipeId) {
 		String nameList = configSectionRecipes.getString(recipeId + ".name");
+		String[] names;
 		if (nameList != null) {
 			String[] name = nameList.split("/");
 			if (name.length > 2) {
-				this.name = name;
+				names = name;
 			} else {
-				this.name = new String[1];
-				this.name[0] = name[0];
+				names = new String[1];
+				names[0] = name[0];
 			}
 		} else {
-			return;
+			return null;
 		}
+
 		List<String> ingredientsList = configSectionRecipes.getStringList(recipeId + ".ingredients");
+		ArrayList<ItemStack> ingredients = new ArrayList<>();
 		if (ingredientsList != null) {
 			for (String item : ingredientsList) {
 				String[] ingredParts = item.split("/");
@@ -72,38 +89,41 @@ public class BRecipe {
 					}
 					if (mat != null) {
 						ItemStack stack = new ItemStack(mat, BreweryPlugin.instance.parseInt(ingredParts[1]), durability);
-						this.ingredients.add(stack);
+						ingredients.add(stack);
 						BIngredients.possibleIngredients.add(mat);
 					} else {
 						BreweryPlugin.instance.errorLog("Unknown Material: " + ingredParts[0]);
-						this.ingredients = null;
-						return;
+						return null;
 					}
 				} else {
-					return;
+					return null;
 				}
 			}
 		}
-		this.cookingTime = configSectionRecipes.getInt(recipeId + ".cookingtime");
-		this.distillruns = configSectionRecipes.getInt(recipeId + ".distillruns");
-		this.wood = (byte) configSectionRecipes.getInt(recipeId + ".wood");
-		this.age = configSectionRecipes.getInt(recipeId + ".age");
-		this.color = configSectionRecipes.getString(recipeId + ".color");
-		this.difficulty = configSectionRecipes.getInt(recipeId + ".difficulty");
-		this.alcohol = configSectionRecipes.getInt(recipeId + ".alcohol");
-		this.splashable = configSectionRecipes.getBoolean(recipeId + ".splashable", false);
+		int cookingTime = configSectionRecipes.getInt(recipeId + ".cookingtime");
+		int distillruns = configSectionRecipes.getInt(recipeId + ".distillruns");
+		byte wood = (byte) configSectionRecipes.getInt(recipeId + ".wood");
+		int age = configSectionRecipes.getInt(recipeId + ".age");
+		String color = configSectionRecipes.getString(recipeId + ".color");
+		int difficulty = configSectionRecipes.getInt(recipeId + ".difficulty");
+		int alcohol = configSectionRecipes.getInt(recipeId + ".alcohol");
+		boolean splashable = configSectionRecipes.getBoolean(recipeId + ".splashable", false);
 
 		List<String> effectStringList = configSectionRecipes.getStringList(recipeId + ".effects");
+		ArrayList<BEffect> effects = new ArrayList<>();
 		if (effectStringList != null) {
 			for (String effectString : effectStringList) {
 				BEffect effect = BEffect.parse(effectString);
 				if (effect != null && effect.isValid()) {
 					effects.add(effect);
 				} else {
-					BreweryPlugin.instance.errorLog("Error adding Effect to Recipe: " + getName(5));
+					BreweryPlugin.instance.errorLog("Error adding Effect to Recipe: " + names[0]);
 				}
 			}
 		}
+
+		return new BRecipe(names, ingredients, cookingTime, distillruns, wood, age, color, difficulty,
+				alcohol, splashable, effects);
 	}
 
 	// allowed deviation to the recipes count of ingredients at the given difficulty
