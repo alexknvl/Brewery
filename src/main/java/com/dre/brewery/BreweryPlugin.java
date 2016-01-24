@@ -7,6 +7,9 @@ import java.util.*;
 import java.io.IOException;
 import java.io.File;
 
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSet;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -39,7 +42,7 @@ public class BreweryPlugin extends JavaPlugin {
 	public static boolean updateCheck;
 	public static Boolean doSigns;
 	public static Boolean logMessages;
-	public static List<String> distortCommands;
+	public static ImmutableSet<String> distortCommands;
 	public static Boolean colorInBarrels; // color the Lore while in Barrels
 	public static Boolean colorInBrewer; // color the Lore while in Brewer
 	public static String homeType;
@@ -49,10 +52,11 @@ public class BreweryPlugin extends JavaPlugin {
 	public static boolean overdrinkKick;
 	public static int hangoverTime;
 	public static Material pukeItem;
-	public static Map<Material, Integer> drainItems = new HashMap<Material, Integer>();// DrainItem Material and Strength
-	public static Set<Material> possibleIngredients = new HashSet<Material>();
-	public static Map<Material, String> cookedNames = new HashMap<Material, String>();
-	public static ArrayList<BrewRecipe> recipes = new ArrayList<BrewRecipe>();
+	// DrainItem Material and Strength
+	public static ImmutableMap<Material, Integer> drainItems;
+	public static ImmutableSet<Material> possibleIngredients;
+	public static ImmutableMap<Material, String> cookedNames;
+	public static ImmutableList<BrewRecipe> recipes;
 	public static boolean openEverywhere;
 
 	// Third Party Enabled
@@ -291,7 +295,7 @@ public class BreweryPlugin extends JavaPlugin {
 		colorInBrewer = config.getBoolean("colorInBrewer", false);
 		openEverywhere = config.getBoolean("openLargeBarrelEverywhere", false);
 		logMessages = config.getBoolean("logRealChat", false);
-		distortCommands = config.getStringList("distortCommands");
+		distortCommands = ImmutableSet.copyOf(config.getStringList("distortCommands"));
 		doSigns = config.getBoolean("distortSignText", false);
 		for (String bypass : config.getStringList("distortBypass")) {
 			DrunkTextEffect.ignoreText.add(bypass.split(","));
@@ -299,6 +303,7 @@ public class BreweryPlugin extends JavaPlugin {
 
 		// loading recipes
 		ConfigurationSection configSection = config.getConfigurationSection("recipes");
+		ArrayList<BrewRecipe> recipes = new ArrayList<>();
 		if (configSection != null) {
 			for (String recipeId : configSection.getKeys(false)) {
 				BrewRecipe recipe = BrewRecipe.read(configSection, recipeId);
@@ -309,9 +314,12 @@ public class BreweryPlugin extends JavaPlugin {
 				}
 			}
 		}
+		BreweryPlugin.recipes = ImmutableList.copyOf(recipes);
 
 		// loading cooked names and possible ingredients
 		configSection = config.getConfigurationSection("cooked");
+		HashMap<Material, String> cookedNames = new HashMap<>();
+		HashSet<Material> possibleIngredients = new HashSet<>();
 		if (configSection != null) {
 			for (String ingredient : configSection.getKeys(false)) {
 				Material mat = Material.matchMaterial(ingredient);
@@ -334,9 +342,12 @@ public class BreweryPlugin extends JavaPlugin {
 				}
 			}
 		}
+		BreweryPlugin.cookedNames = ImmutableMap.copyOf(cookedNames);
+		BreweryPlugin.possibleIngredients = ImmutableSet.copyOf(possibleIngredients);
 
 		// loading drainItems
 		List<String> drainList = config.getStringList("drainItems");
+		HashMap<Material, Integer> drainItems = new HashMap<>();
 		if (drainList != null) {
 			for (String drainString : drainList) {
 				String[] drainSplit = drainString.split("/");
@@ -360,6 +371,7 @@ public class BreweryPlugin extends JavaPlugin {
 				}
 			}
 		}
+		BreweryPlugin.drainItems = ImmutableMap.copyOf(drainItems);
 
 		// telling DrunkTextEffect the path, it will load it when needed
 		DrunkTextEffect.loadWords(config);
