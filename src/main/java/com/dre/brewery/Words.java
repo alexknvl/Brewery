@@ -21,7 +21,7 @@ public class Words {
 	public static FileConfiguration config;
 	public static Boolean doSigns;
 	public static Boolean log;
-	private static Map<String, Long> waitPlayers = new HashMap<String, Long>();
+	public static Map<String, Long> waitPlayers = new HashMap<String, Long>();
 
 	private String from;
 	private String to;
@@ -72,36 +72,6 @@ public class Words {
 			load();
 		}
 		return !words.isEmpty();
-	}
-
-	// Distort players words when he uses a command
-	public static void playerCommand(PlayerCommandPreprocessEvent event) {
-		BPlayer bPlayer = BPlayer.get(event.getPlayer());
-		if (bPlayer != null) {
-			if (!commands.isEmpty() && loadWords()) {
-				String name = event.getPlayer().getName();
-				if (!waitPlayers.containsKey(name) || waitPlayers.get(name) + 500 < System.currentTimeMillis()) {
-					String chat = event.getMessage();
-					for (String command : commands) {
-						if (command.length() + 1 < chat.length()) {
-							if (Character.isSpaceChar(chat.charAt(command.length()))) {
-								if (chat.toLowerCase().startsWith(command.toLowerCase())) {
-									if (log) {
-										BreweryPlugin.instance.log(BreweryPlugin.instance.languageReader.get("Player_TriedToSay", name, chat));
-									}
-									String message = chat.substring(command.length() + 1);
-									message = distortMessage(message, bPlayer.getDrunkeness());
-
-									event.setMessage(chat.substring(0, command.length() + 1) + message);
-									waitPlayers.put(name, System.currentTimeMillis());
-									return;
-								}
-							}
-						}
-					}
-				}
-			}
-		}
 	}
 
 	// distorts a message, ignoring text enclosed in ignoreText letters
