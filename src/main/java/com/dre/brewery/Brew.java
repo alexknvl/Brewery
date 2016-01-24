@@ -306,20 +306,6 @@ public class Brew {
 
 	// Distilling section ---------------
 
-	// distill all custom potions in the brewer
-	public static void distillAll(BrewerInventory inv, Boolean[] contents) {
-		int slot = 0;
-		while (slot < 3) {
-			if (contents[slot]) {
-				ItemStack slotItem = inv.getItem(slot);
-				PotionMeta potionMeta = (PotionMeta) slotItem.getItemMeta();
-				Brew brew = get(potionMeta);
-				brew.distillSlot(slotItem, potionMeta);
-			}
-			slot++;
-		}
-	}
-
 	// distill custom potion in given slot
 	public void distillSlot(ItemStack slotItem, PotionMeta potionMeta) {
 		if (stat) {
