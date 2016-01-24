@@ -2,6 +2,7 @@ package com.dre.brewery.listeners;
 
 import java.util.ArrayList;
 
+import com.dre.brewery.*;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -9,12 +10,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-import com.dre.brewery.BIngredients;
-import com.dre.brewery.BRecipe;
-import com.dre.brewery.BreweryPlugin;
-import com.dre.brewery.Wakeup;
-import com.dre.brewery.BPlayer;
-import com.dre.brewery.Brew;
+import com.dre.brewery.BrewRecipe;
 
 public class CommandListener implements CommandExecutor {
 
@@ -536,8 +532,8 @@ public class CommandListener implements CommandExecutor {
 				return;
 			}
 
-			BRecipe recipe = null;
-			for (BRecipe r : BIngredients.recipes) {
+			BrewRecipe recipe = null;
+			for (BrewRecipe r : BIngredients.recipes) {
 				if (r.hasName(name)) {
 					recipe = r;
 					break;

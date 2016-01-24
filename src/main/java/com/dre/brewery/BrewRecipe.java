@@ -9,7 +9,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.potion.PotionEffectType;
 
-public class BRecipe {
+public class BrewRecipe {
 	private final String[] name;
 	private final ArrayList<ItemStack> ingredients;// material and amount
 	private final int cookingTime;// time to cook in cauldron
@@ -20,10 +20,10 @@ public class BRecipe {
 	private final int difficulty;// difficulty to brew the potion, how exact the instruction has to be followed
 	private final int alcohol;// Alcohol in perfect potion
 	private final boolean splashable;
-	private final ArrayList<BEffect> effects; // Special Effects when drinking
+	private final ArrayList<BrewEffect> effects; // Special Effects when drinking
 
-	public BRecipe(String[] name, ArrayList<ItemStack> ingredients, int cookingTime, int distillRuns, byte wood,
-				   int age, String color, int difficulty, int alcohol, boolean splashable, ArrayList<BEffect> effects) {
+	public BrewRecipe(String[] name, ArrayList<ItemStack> ingredients, int cookingTime, int distillRuns, byte wood,
+					  int age, String color, int difficulty, int alcohol, boolean splashable, ArrayList<BrewEffect> effects) {
 		this.name = name;
 		this.ingredients = ingredients;
 		this.cookingTime = cookingTime;
@@ -37,7 +37,7 @@ public class BRecipe {
 		this.effects = effects;
 	}
 
-	public static BRecipe read(ConfigurationSection configSectionRecipes, String recipeId) {
+	public static BrewRecipe read(ConfigurationSection configSectionRecipes, String recipeId) {
 		String nameList = configSectionRecipes.getString(recipeId + ".name");
 		String[] names;
 		if (nameList != null) {
@@ -110,10 +110,10 @@ public class BRecipe {
 		boolean splashable = configSectionRecipes.getBoolean(recipeId + ".splashable", false);
 
 		List<String> effectStringList = configSectionRecipes.getStringList(recipeId + ".effects");
-		ArrayList<BEffect> effects = new ArrayList<>();
+		ArrayList<BrewEffect> effects = new ArrayList<>();
 		if (effectStringList != null) {
 			for (String effectString : effectStringList) {
-				BEffect effect = BEffect.parse(effectString);
+				BrewEffect effect = BrewEffect.parse(effectString);
 				if (effect != null && effect.isValid()) {
 					effects.add(effect);
 				} else {
@@ -122,7 +122,7 @@ public class BRecipe {
 			}
 		}
 
-		return new BRecipe(names, ingredients, cookingTime, distillruns, wood, age, color, difficulty,
+		return new BrewRecipe(names, ingredients, cookingTime, distillruns, wood, age, color, difficulty,
 				alcohol, splashable, effects);
 	}
 
@@ -318,7 +318,7 @@ public class BRecipe {
 		return alcohol;
 	}
 
-	public ArrayList<BEffect> getEffects() {
+	public ArrayList<BrewEffect> getEffects() {
 		return effects;
 	}
 

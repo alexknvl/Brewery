@@ -464,9 +464,9 @@ public class BPlayer {
 	}
 
 	public static void addBrewEffects(Brew brew, Player player, double intensity) {
-		ArrayList<BEffect> effects = brew.getEffects();
+		ArrayList<BrewEffect> effects = brew.getEffects();
 		if (effects != null) {
-			for (BEffect effect : effects) {
+			for (BrewEffect effect : effects) {
 				effect.apply(brew.getQuality(), player, intensity);
 			}
 		}

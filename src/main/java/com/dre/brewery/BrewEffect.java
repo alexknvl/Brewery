@@ -5,20 +5,20 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.potion.PotionEffectType;
 
-public class BEffect {
+public class BrewEffect {
 	private final PotionEffectType type;
 	private final IntRange levelRange;
 	private final IntRange durationRange;
 	private final boolean hidden;
 
-	public BEffect(PotionEffectType type, IntRange levelRange, IntRange durationRange, boolean hidden) {
+	public BrewEffect(PotionEffectType type, IntRange levelRange, IntRange durationRange, boolean hidden) {
 		this.type = type;
 		this.levelRange = levelRange;
 		this.durationRange = durationRange;
 		this.hidden = hidden;
 	}
 
-	public static BEffect parse(String effectString) {
+	public static BrewEffect parse(String effectString) {
 		try {
 			boolean hidden;
 			String[] effectSplit = effectString.split("/");
@@ -64,7 +64,7 @@ public class BEffect {
 				durationRange = new IntRange(10, 20);
 			}
 
-			return new BEffect(type, levelRange, durationRange, hidden);
+			return new BrewEffect(type, levelRange, durationRange, hidden);
 		} catch (RuntimeException e) {
 			return null;
 		}

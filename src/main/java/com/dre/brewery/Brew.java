@@ -26,7 +26,7 @@ public class Brew {
 	private int distillRuns;
 	private float ageTime;
 	private float wood;
-	private BRecipe currentRecipe;
+	private BrewRecipe currentRecipe;
 	private boolean unlabeled;
 	private boolean persistent;
 	private boolean stat; // static potions should not be changed
@@ -37,7 +37,7 @@ public class Brew {
 	}
 
 	// quality already set
-	public Brew(int uid, int quality, BRecipe recipe, BIngredients ingredients) {
+	public Brew(int uid, int quality, BrewRecipe recipe, BIngredients ingredients) {
 		this.ingredients = ingredients;
 		this.quality = quality;
 		this.currentRecipe = recipe;
@@ -120,7 +120,7 @@ public class Brew {
 	public boolean setRecipeFromString(String name) {
 		currentRecipe = null;
 		if (name != null && !name.equals("")) {
-			for (BRecipe recipe : BIngredients.recipes) {
+			for (BrewRecipe recipe : BIngredients.recipes) {
 				if (recipe.getName(5).equalsIgnoreCase(name)) {
 					currentRecipe = recipe;
 					return true;
@@ -253,7 +253,7 @@ public class Brew {
 	}
 
 	// return special effect
-	public ArrayList<BEffect> getEffects() {
+	public ArrayList<BrewEffect> getEffects() {
 		if (currentRecipe != null && quality > 0) {
 			return currentRecipe.getEffects();
 		}
@@ -328,7 +328,7 @@ public class Brew {
 		}
 
 		distillRuns += 1;
-		BRecipe recipe = ingredients.getdistillRecipe(wood, ageTime);
+		BrewRecipe recipe = ingredients.getdistillRecipe(wood, ageTime);
 		if (recipe != null) {
 			// distillRuns will have an effect on the amount of alcohol, not the quality
 			currentRecipe = recipe;
@@ -378,7 +378,7 @@ public class Brew {
 					woodShift(time, woodType);
 				}
 			}
-			BRecipe recipe = ingredients.getAgeRecipe(wood, ageTime, distillRuns > 0);
+			BrewRecipe recipe = ingredients.getAgeRecipe(wood, ageTime, distillRuns > 0);
 			if (recipe != null) {
 				currentRecipe = recipe;
 				quality = calcQuality();
@@ -557,9 +557,9 @@ public class Brew {
 	}
 
 	// Adds the Effect names to the Items description
-	public static void addOrReplaceEffects(PotionMeta meta, ArrayList<BEffect> effects, int quality) {
+	public static void addOrReplaceEffects(PotionMeta meta, ArrayList<BrewEffect> effects, int quality) {
 		if (effects != null) {
-			for (BEffect effect : effects) {
+			for (BrewEffect effect : effects) {
 				if (!effect.isHidden()) {
 					effect.writeInto(meta, quality);
 				}
