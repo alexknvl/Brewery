@@ -13,7 +13,7 @@ public class BRecipe {
 	private final String[] name;
 	private final ArrayList<ItemStack> ingredients;// material and amount
 	private final int cookingTime;// time to cook in cauldron
-	private final int distillruns;// runs through the brewer
+	private final int distillRuns;// runs through the brewer
 	private final byte wood;// type of wood the barrel has to consist of
 	private final int age;// time in minecraft days for the potions to age in barrels
 	private final String color;// color of the destilled/finished potion
@@ -22,12 +22,12 @@ public class BRecipe {
 	private final boolean splashable;
 	private final ArrayList<BEffect> effects; // Special Effects when drinking
 
-	public BRecipe(String[] name, ArrayList<ItemStack> ingredients, int cookingTime, int distillruns, byte wood,
+	public BRecipe(String[] name, ArrayList<ItemStack> ingredients, int cookingTime, int distillRuns, byte wood,
 				   int age, String color, int difficulty, int alcohol, boolean splashable, ArrayList<BEffect> effects) {
 		this.name = name;
 		this.ingredients = ingredients;
 		this.cookingTime = cookingTime;
-		this.distillruns = distillruns;
+		this.distillRuns = distillRuns;
 		this.wood = wood;
 		this.age = age;
 		this.color = color;
@@ -158,11 +158,11 @@ public class BRecipe {
 	}
 
 	public boolean isCookingOnly() {
-		return age == 0 && distillruns == 0;
+		return age == 0 && distillRuns == 0;
 	}
 
 	public boolean needsDistilling() {
-		return distillruns != 0;
+		return distillRuns != 0;
 	}
 
 	public boolean needsToAge() {
@@ -229,7 +229,7 @@ public class BRecipe {
 
 		BIngredients bIngredients = new BIngredients(list, cookingTime);
 
-		Brew brew = new Brew(uid, bIngredients, quality, distillruns, getAge(), wood, getName(5), false, false, true);
+		Brew brew = new Brew(uid, bIngredients, quality, distillRuns, getAge(), wood, getName(5), false, false, true);
 
 		potion.setDurability(Brew.PotionColor.valueOf(getColor()).getColorId(false));
 		potionMeta.setDisplayName(BreweryPlugin.instance.color("&f" + getName(quality)));
@@ -291,7 +291,7 @@ public class BRecipe {
 	}
 
 	public int getDistillRuns() {
-		return distillruns;
+		return distillRuns;
 	}
 
 	public String getColor() {
