@@ -4,12 +4,8 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import java.lang.Character;
 
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.event.player.AsyncPlayerChatEvent;
-import org.bukkit.event.player.PlayerCommandPreprocessEvent;
-import org.bukkit.event.block.SignChangeEvent;
 
 public class Words {
 
@@ -69,7 +65,11 @@ public class Words {
 	public static boolean loadWords() {
 		if (words.isEmpty()) {
 			// load when first drunk player talks
-			load();
+			if (config != null) {
+                for (Map<?, ?> map : config.getMapList("words")) {
+                    new Words(map);
+                }
+            }
 		}
 		return !words.isEmpty();
 	}
@@ -223,15 +223,6 @@ public class Words {
 			isBefore = true;
 		}
 		return isBefore;
-	}
-
-	// load from config file
-	public static void load() {
-		if (config != null) {
-			for (Map<?, ?> map : config.getMapList("words")) {
-				new Words(map);
-			}
-		}
 	}
 
 }
