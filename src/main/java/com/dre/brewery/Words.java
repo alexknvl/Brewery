@@ -16,7 +16,6 @@ public class Words {
 	public static List<String[]> ignoreText = new ArrayList<String[]>();
 	public static Boolean doSigns;
 	public static Boolean log;
-	public static Map<String, Long> waitPlayers = new HashMap<String, Long>();
 
 	private String from;
 	private String to;

@@ -230,22 +230,19 @@ public class PlayerListener implements Listener {
 		if (bPlayer != null) {
 			if (!Words.commands.isEmpty()) {
 				String name = event.getPlayer().getName();
-				if (!Words.waitPlayers.containsKey(name) || Words.waitPlayers.get(name) + 500 < System.currentTimeMillis()) {
-					String chat = event.getMessage();
-					for (String command : Words.commands) {
-						if (command.length() + 1 < chat.length()) {
-							if (Character.isSpaceChar(chat.charAt(command.length()))) {
-								if (chat.toLowerCase().startsWith(command.toLowerCase())) {
-									if (Words.log) {
-										BreweryPlugin.instance.log(BreweryPlugin.instance.languageReader.get("Player_TriedToSay", name, chat));
-									}
-									String message = chat.substring(command.length() + 1);
-									message = Words.distortMessage(message, bPlayer.getDrunkeness());
-
-									event.setMessage(chat.substring(0, command.length() + 1) + message);
-									Words.waitPlayers.put(name, System.currentTimeMillis());
-									return;
+				String chat = event.getMessage();
+				for (String command : Words.commands) {
+					if (command.length() + 1 < chat.length()) {
+						if (Character.isSpaceChar(chat.charAt(command.length()))) {
+							if (chat.toLowerCase().startsWith(command.toLowerCase())) {
+								if (Words.log) {
+									BreweryPlugin.instance.log(BreweryPlugin.instance.languageReader.get("Player_TriedToSay", name, chat));
 								}
+								String message = chat.substring(command.length() + 1);
+								message = Words.distortMessage(message, bPlayer.getDrunkeness());
+
+								event.setMessage(chat.substring(0, command.length() + 1) + message);
+								return;
 							}
 						}
 					}
