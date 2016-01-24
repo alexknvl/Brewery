@@ -18,7 +18,6 @@ import com.dre.brewery.filedata.UpdateChecker;
 
 
 public class PlayerListener implements Listener {
-	public static boolean openEverywhere;
 
 	@EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
 	public void onPlayerInteract(PlayerInteractEvent event) {
@@ -72,7 +71,7 @@ public class PlayerListener implements Listener {
 						if (down.getType() == Material.FIRE || down.getType() == Material.STATIONARY_LAVA || down.getType() == Material.LAVA) {
 
 							// add ingredient to cauldron that meet the previous conditions
-							if (BIngredients.possibleIngredients.contains(materialInHand)) {
+							if (BreweryPlugin.possibleIngredients.contains(materialInHand)) {
 
 								if (player.hasPermission("brewery.cauldron.insert")) {
 									if (CauldronWrapper.ingredientAdd(clickedBlock, item)) {
@@ -107,13 +106,13 @@ public class PlayerListener implements Listener {
 					// Access a Barrel
 					Barrel barrel = null;
 					if (type == Material.WOOD) {
-						if (openEverywhere) {
+						if (BreweryPlugin.openEverywhere) {
 							barrel = Barrel.get(clickedBlock);
 						}
 					} else if (Barrel.isStairs(type)) {
 						for (Barrel barrel2 : Barrel.barrels) {
 							if (barrel2.hasStairsBlock(clickedBlock)) {
-								if (openEverywhere || !barrel2.isLarge()) {
+								if (BreweryPlugin.openEverywhere || !barrel2.isLarge()) {
 									barrel = barrel2;
 								}
 								break;
@@ -162,7 +161,7 @@ public class PlayerListener implements Listener {
 						brew.remove(item);
 					}
 				}
-			} else if (PlayerWrapper.drainItems.containsKey(item.getType())) {
+			} else if (BreweryPlugin.drainItems.containsKey(item.getType())) {
 				PlayerWrapper bplayer = PlayerWrapper.get(player);
 				if (bplayer != null) {
 					bplayer.drainByItem(player, item.getType());

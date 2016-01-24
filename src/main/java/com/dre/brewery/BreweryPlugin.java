@@ -3,14 +3,9 @@ package com.dre.brewery;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.Map;
-import java.util.List;
-import java.util.ArrayList;
-import java.util.ListIterator;
-import java.util.HashMap;
+import java.util.*;
 import java.io.IOException;
 import java.io.File;
-import java.util.UUID;
 
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -45,6 +40,20 @@ public class BreweryPlugin extends JavaPlugin {
 	public static Boolean doSigns;
 	public static Boolean logMessages;
 	public static List<String> distortCommands;
+	public static Boolean colorInBarrels; // color the Lore while in Barrels
+	public static Boolean colorInBrewer; // color the Lore while in Brewer
+	public static String homeType;
+	public static boolean enablePuke;
+	public static boolean enableLoginDisallow;
+	public static boolean enableHome;
+	public static boolean overdrinkKick;
+	public static int hangoverTime;
+	public static Material pukeItem;
+	public static Map<Material, Integer> drainItems = new HashMap<Material, Integer>();// DrainItem Material and Strength
+	public static Set<Material> possibleIngredients = new HashSet<Material>();
+	public static Map<Material, String> cookedNames = new HashMap<Material, String>();
+	public static ArrayList<BrewRecipe> recipes = new ArrayList<BrewRecipe>();
+	public static boolean openEverywhere;
 
 	// Third Party Enabled
 	public boolean useWG; //WorldGuard
@@ -138,9 +147,9 @@ public class BreweryPlugin extends JavaPlugin {
 		// delete Data from Ram
 		Barrel.barrels.clear();
 		CauldronWrapper.bcauldrons.clear();
-		BIngredients.possibleIngredients.clear();
-		BIngredients.recipes.clear();
-		BIngredients.cookedNames.clear();
+		possibleIngredients.clear();
+		recipes.clear();
+		cookedNames.clear();
 		PlayerWrapper.clear();
 		Brew.potions.clear();
 		Wakeup.wakeups.clear();
@@ -158,11 +167,11 @@ public class BreweryPlugin extends JavaPlugin {
 	
 	public void reload(CommandSender sender) {
 		// clear all existent config Data
-		BIngredients.possibleIngredients.clear();
-		BIngredients.recipes.clear();
-		BIngredients.cookedNames.clear();
+		possibleIngredients.clear();
+		recipes.clear();
+		cookedNames.clear();
 		DrunkTextEffect.words.clear();
-		PlayerWrapper.drainItems.clear();
+		drainItems.clear();
 		if (useLB) {
 			try {
 				LogBlockBarrel.clear();
@@ -271,16 +280,16 @@ public class BreweryPlugin extends JavaPlugin {
 		// various Settings
 		DataSave.autosave = config.getInt("autosave", 3);
 		debug = config.getBoolean("debug", false);
-		PlayerWrapper.pukeItem = Material.matchMaterial(config.getString("pukeItem", "SOUL_SAND"));
-		PlayerWrapper.hangoverTime = config.getInt("hangoverDays", 0) * 24 * 60;
-		PlayerWrapper.overdrinkKick = config.getBoolean("enableKickOnOverdrink", false);
-		PlayerWrapper.enableHome = config.getBoolean("enableHome", false);
-		PlayerWrapper.enableLoginDisallow = config.getBoolean("enableLoginDisallow", false);
-		PlayerWrapper.enablePuke = config.getBoolean("enablePuke", false);
-		PlayerWrapper.homeType = config.getString("homeType", null);
-		Brew.colorInBarrels = config.getBoolean("colorInBarrels", false);
-		Brew.colorInBrewer = config.getBoolean("colorInBrewer", false);
-		PlayerListener.openEverywhere = config.getBoolean("openLargeBarrelEverywhere", false);
+		pukeItem = Material.matchMaterial(config.getString("pukeItem", "SOUL_SAND"));
+		hangoverTime = config.getInt("hangoverDays", 0) * 24 * 60;
+		overdrinkKick = config.getBoolean("enableKickOnOverdrink", false);
+		enableHome = config.getBoolean("enableHome", false);
+		enableLoginDisallow = config.getBoolean("enableLoginDisallow", false);
+		enablePuke = config.getBoolean("enablePuke", false);
+		homeType = config.getString("homeType", null);
+		colorInBarrels = config.getBoolean("colorInBarrels", false);
+		colorInBrewer = config.getBoolean("colorInBrewer", false);
+		openEverywhere = config.getBoolean("openLargeBarrelEverywhere", false);
 		logMessages = config.getBoolean("logRealChat", false);
 		distortCommands = config.getStringList("distortCommands");
 		doSigns = config.getBoolean("distortSignText", false);
@@ -294,7 +303,7 @@ public class BreweryPlugin extends JavaPlugin {
 			for (String recipeId : configSection.getKeys(false)) {
 				BrewRecipe recipe = BrewRecipe.read(configSection, recipeId);
 				if (recipe != null && recipe.isValid()) {
-					BIngredients.recipes.add(recipe);
+					recipes.add(recipe);
 				} else {
 					errorLog("Loading the Recipe with id: '" + recipeId + "' failed!");
 				}
@@ -318,8 +327,8 @@ public class BreweryPlugin extends JavaPlugin {
 					}
 				}
 				if (mat != null) {
-					BIngredients.cookedNames.put(mat, (configSection.getString(ingredient, null)));
-					BIngredients.possibleIngredients.add(mat);
+					cookedNames.put(mat, (configSection.getString(ingredient, null)));
+					possibleIngredients.add(mat);
 				} else {
 					errorLog("Unknown Material: " + ingredient);
 				}
@@ -346,7 +355,7 @@ public class BreweryPlugin extends JavaPlugin {
 						}
 					}
 					if (mat != null && strength > 0) {
-						PlayerWrapper.drainItems.put(mat, strength);
+						drainItems.put(mat, strength);
 					}
 				}
 			}

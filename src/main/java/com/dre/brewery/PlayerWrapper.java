@@ -1,6 +1,5 @@
 package com.dre.brewery;
 
-import java.util.ArrayList;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -23,16 +22,6 @@ public class PlayerWrapper {
 	private static Map<String, PlayerWrapper> players = new HashMap<String, PlayerWrapper>();// Players name/uuid and BPlayer
 	private static Map<Player, Integer> pTasks = new HashMap<Player, Integer>();// Player and count
 	private static int taskId;
-
-	// Settings
-	public static Map<Material, Integer> drainItems = new HashMap<Material, Integer>();// DrainItem Material and Strength
-	public static Material pukeItem;
-	public static int hangoverTime;
-	public static boolean overdrinkKick;
-	public static boolean enableHome;
-	public static boolean enableLoginDisallow;
-	public static boolean enablePuke;
-	public static String homeType;
 
 	private int quality = 0;// = quality of drunkeness * drunkeness
 	private int drunkeness = 0;// = amount of drunkeness
@@ -166,7 +155,7 @@ public class PlayerWrapper {
 
 	// Player has drunken too much
 	public void drinkCap(Player player) {
-		if (overdrinkKick && !player.hasPermission("brewery.bypass.overdrink")) {
+		if (BreweryPlugin.overdrinkKick && !player.hasPermission("brewery.bypass.overdrink")) {
 			passOut(player);
 		} else {
 			quality = getQuality() * 100;
@@ -186,7 +175,7 @@ public class PlayerWrapper {
 
 	// Eat something to drain the drunkeness
 	public void drainByItem(Player player, Material mat) {
-		int strength = drainItems.get(mat);
+		int strength = BreweryPlugin.drainItems.get(mat);
 		if (drain(player, strength)) {
 			remove(player);
 		}
@@ -210,7 +199,7 @@ public class PlayerWrapper {
 			}
 			quality = getQuality();
 			if (drunkeness <= -offlineDrunk) {
-				if (drunkeness <= -hangoverTime) {
+				if (drunkeness <= -BreweryPlugin.hangoverTime) {
 					return true;
 				}
 			}
@@ -267,7 +256,7 @@ public class PlayerWrapper {
 		if (drunkeness <= 70) {
 			return 0;
 		}
-		if (!enableLoginDisallow) {
+		if (!BreweryPlugin.enableLoginDisallow) {
 			if (drunkeness <= 100) {
 				return 0;
 			} else {
@@ -314,7 +303,7 @@ public class PlayerWrapper {
 	public void login(final Player player) {
 		if (drunkeness < 10) {
 			if (offlineDrunk > 60) {
-				if (enableHome && !player.hasPermission("brewery.bypass.teleport")) {
+				if (BreweryPlugin.enableHome && !player.hasPermission("brewery.bypass.teleport")) {
 					goHome(player);
 				}
 			}
@@ -341,16 +330,16 @@ public class PlayerWrapper {
 	}
 
 	public void goHome(final Player player) {
-		if (homeType != null) {
+		if (BreweryPlugin.homeType != null) {
 			Location home = null;
-			if (homeType.equalsIgnoreCase("bed")) {
+			if (BreweryPlugin.homeType.equalsIgnoreCase("bed")) {
 				home = player.getBedSpawnLocation();
-			} else if (homeType.startsWith("cmd: ")) {
-				player.performCommand(homeType.substring(5));
-			} else if (homeType.startsWith("cmd:")) {
-				player.performCommand(homeType.substring(4));
+			} else if (BreweryPlugin.homeType.startsWith("cmd: ")) {
+				player.performCommand(BreweryPlugin.homeType.substring(5));
+			} else if (BreweryPlugin.homeType.startsWith("cmd:")) {
+				player.performCommand(BreweryPlugin.homeType.substring(4));
 			} else {
-				BreweryPlugin.instance.errorLog("Config.yml 'homeType: " + homeType + "' unknown!");
+				BreweryPlugin.instance.errorLog("Config.yml 'homeType: " + BreweryPlugin.homeType + "' unknown!");
 			}
 			if (home != null) {
 				player.teleport(home);
@@ -380,7 +369,7 @@ public class PlayerWrapper {
 
 	// make a Player puke "count" items
 	public static void addPuke(Player player, int count) {
-		if (!enablePuke) {
+		if (!BreweryPlugin.enablePuke) {
 			return;
 		}
 
@@ -416,7 +405,7 @@ public class PlayerWrapper {
 		loc.setY(loc.getY() + 1.5);
 		loc.setPitch(loc.getPitch() + 10);
 		loc.add(direction);
-		Item item = player.getWorld().dropItem(loc, new ItemStack(pukeItem));
+		Item item = player.getWorld().dropItem(loc, new ItemStack(BreweryPlugin.pukeItem));
 		item.setVelocity(direction);
 		item.setPickupDelay(Integer.MAX_VALUE);
 	}
@@ -496,7 +485,7 @@ public class PlayerWrapper {
 
 						bplayer.drunkEffects(player);
 
-						if (enablePuke) {
+						if (BreweryPlugin.enablePuke) {
 							bplayer.drunkPuke(player);
 						}
 

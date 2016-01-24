@@ -19,8 +19,6 @@ public class Brew {
 	// represents the liquid in the brewed Potions
 
 	public static Map<Integer, Brew> potions = new HashMap<Integer, Brew>();
-	public static Boolean colorInBarrels; // color the Lore while in Barrels
-	public static Boolean colorInBrewer; // color the Lore while in Brewer
 
 	private BIngredients ingredients;
 	private int quality;
@@ -121,7 +119,7 @@ public class Brew {
 	public boolean setRecipeFromString(String name) {
 		currentRecipe = null;
 		if (name != null && !name.equals("")) {
-			for (BrewRecipe recipe : BIngredients.recipes) {
+			for (BrewRecipe recipe : BreweryPlugin.recipes) {
 				if (recipe.getName(5).equalsIgnoreCase(name)) {
 					currentRecipe = recipe;
 					return true;
@@ -347,12 +345,12 @@ public class Brew {
 
 		// Distill Lore
 		if (currentRecipe != null) {
-			if (colorInBrewer != hasColorLore(potionMeta)) {
-				convertLore(potionMeta, colorInBrewer);
+			if (BreweryPlugin.colorInBrewer != hasColorLore(potionMeta)) {
+				convertLore(potionMeta, BreweryPlugin.colorInBrewer);
 			}
 		}
 		String prefix = BreweryPlugin.instance.color("&7");
-		if (colorInBrewer && currentRecipe != null) {
+		if (BreweryPlugin.colorInBrewer && currentRecipe != null) {
 			prefix = getQualityColor(ingredients.getDistillQuality(recipe, distillRuns));
 		}
 		updateDistillLore(prefix, potionMeta);
@@ -397,19 +395,19 @@ public class Brew {
 
 		// Lore
 		if (currentRecipe != null) {
-			if (colorInBarrels != hasColorLore(potionMeta)) {
-				convertLore(potionMeta, colorInBarrels);
+			if (BreweryPlugin.colorInBarrels != hasColorLore(potionMeta)) {
+				convertLore(potionMeta, BreweryPlugin.colorInBarrels);
 			}
 		}
 		if (ageTime >= 1) {
 			String prefix = BreweryPlugin.instance.color("&7");
-			if (colorInBarrels && currentRecipe != null) {
+			if (BreweryPlugin.colorInBarrels && currentRecipe != null) {
 				prefix = getQualityColor(ingredients.getAgeQuality(currentRecipe, ageTime));
 			}
 			updateAgeLore(prefix, potionMeta);
 		}
 		if (ageTime > 0.5) {
-			if (colorInBarrels && !unlabeled && currentRecipe != null) {
+			if (BreweryPlugin.colorInBarrels && !unlabeled && currentRecipe != null) {
 				updateWoodLore(potionMeta);
 			}
 		}

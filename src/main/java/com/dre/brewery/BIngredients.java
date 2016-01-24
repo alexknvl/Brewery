@@ -1,10 +1,8 @@
 package com.dre.brewery;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.HashMap;
-import java.util.Set;
 
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
@@ -13,9 +11,6 @@ import org.bukkit.potion.PotionEffectType;
 import org.bukkit.inventory.meta.PotionMeta;
 
 public class BIngredients {
-	public static Set<Material> possibleIngredients = new HashSet<Material>();
-	public static ArrayList<BrewRecipe> recipes = new ArrayList<BrewRecipe>();
-	public static Map<Material, String> cookedNames = new HashMap<Material, String>();
 	private static int lastId = 0;
 
 	private int id;
@@ -95,10 +90,10 @@ public class BIngredients {
 				potion.setDurability(Brew.PotionColor.BLUE.getColorId(false));
 			} else {
 				for (Material ingredient : materials.keySet()) {
-					if (cookedNames.containsKey(ingredient)) {
+					if (BreweryPlugin.cookedNames.containsKey(ingredient)) {
 						// if more than half of the ingredients is of one kind
 						if (materials.get(ingredient) > (getIngredientsCount() / 2)) {
-							cookedName = cookedNames.get(ingredient);
+							cookedName = BreweryPlugin.cookedNames.get(ingredient);
 							potion.setDurability(Brew.PotionColor.CYAN.getColorId(true));
 						}
 					}
@@ -145,7 +140,7 @@ public class BIngredients {
 		int woodQuality;
 		int ageQuality;
 		BrewRecipe bestRecipe = null;
-		for (BrewRecipe recipe : recipes) {
+		for (BrewRecipe recipe : BreweryPlugin.recipes) {
 			ingredientQuality = getIngredientQuality(recipe);
 			cookingQuality = getCookingQuality(recipe, distilled);
 

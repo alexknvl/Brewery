@@ -92,7 +92,7 @@ public class BrewRecipe {
 					if (mat != null) {
 						ItemStack stack = new ItemStack(mat, BreweryPlugin.instance.parseInt(ingredParts[1]), durability);
 						ingredients.add(stack);
-						BIngredients.possibleIngredients.add(mat);
+						BreweryPlugin.possibleIngredients.add(mat);
 					} else {
 						BreweryPlugin.instance.errorLog("Unknown Material: " + ingredParts[0]);
 						return null;

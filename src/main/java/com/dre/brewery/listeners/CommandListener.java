@@ -313,7 +313,7 @@ public class CommandListener implements CommandExecutor {
 			if (player != null) {
 				playerWrapper.drinkCap(player);
 			} else {
-				if (!PlayerWrapper.overdrinkKick) {
+				if (!BreweryPlugin.overdrinkKick) {
 					playerWrapper.setData(100, 0);
 				}
 			}
@@ -533,7 +533,7 @@ public class CommandListener implements CommandExecutor {
 			}
 
 			BrewRecipe recipe = null;
-			for (BrewRecipe r : BIngredients.recipes) {
+			for (BrewRecipe r : BreweryPlugin.recipes) {
 				if (r.hasName(name)) {
 					recipe = r;
 					break;
