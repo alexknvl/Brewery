@@ -9,7 +9,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import com.dre.brewery.BCauldron;
+import com.dre.brewery.CauldronWrapper;
 import com.dre.brewery.BPlayer;
 import com.dre.brewery.Barrel;
 import com.dre.brewery.Brew;
@@ -63,8 +63,8 @@ public class DataSave extends BukkitRunnable {
 			Brew.save(configFile.createSection("Brew"));
 		}
 
-		if (!BCauldron.bcauldrons.isEmpty() || oldData.contains("BCauldron")) {
-			BCauldron.save(configFile.createSection("BCauldron"), oldData.getConfigurationSection("BCauldron"));
+		if (!CauldronWrapper.bcauldrons.isEmpty() || oldData.contains("BCauldron")) {
+			CauldronWrapper.save(configFile.createSection("BCauldron"), oldData.getConfigurationSection("BCauldron"));
 		}
 
 		if (!Barrel.barrels.isEmpty() || oldData.contains("Barrel")) {

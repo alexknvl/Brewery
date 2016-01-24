@@ -12,22 +12,22 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.material.Cauldron;
 import org.bukkit.material.MaterialData;
 
-public class BCauldron {
-	public static CopyOnWriteArrayList<BCauldron> bcauldrons = new CopyOnWriteArrayList<BCauldron>();
+public class CauldronWrapper {
+	public static CopyOnWriteArrayList<CauldronWrapper> bcauldrons = new CopyOnWriteArrayList<CauldronWrapper>();
 
 	private BIngredients ingredients = new BIngredients();
 	private Block block;
 	private int state = 1;
 	private boolean someRemoved = false;
 
-	public BCauldron(Block block, ItemStack ingredient) {
+	public CauldronWrapper(Block block, ItemStack ingredient) {
 		this.block = block;
 		add(ingredient);
 		bcauldrons.add(this);
 	}
 
 	// loading from file
-	public BCauldron(Block block, BIngredients ingredients, int state) {
+	public CauldronWrapper(Block block, BIngredients ingredients, int state) {
 		this.block = block;
 		this.state = state;
 		this.ingredients = ingredients;
@@ -62,8 +62,8 @@ public class BCauldron {
 	}
 
 	// get cauldron by Block
-	public static BCauldron get(Block block) {
-		for (BCauldron bcauldron : bcauldrons) {
+	public static CauldronWrapper get(Block block) {
+		for (CauldronWrapper bcauldron : bcauldrons) {
 			if (bcauldron.block.equals(block)) {
 				return bcauldron;
 			}
@@ -75,12 +75,12 @@ public class BCauldron {
 	public static boolean ingredientAdd(Block block, ItemStack ingredient) {
 		// if not empty
 		if (getFillLevel(block) != 0) {
-			BCauldron bcauldron = get(block);
+			CauldronWrapper bcauldron = get(block);
 			if (bcauldron != null) {
 				bcauldron.add(ingredient);
 				return true;
 			} else {
-				new BCauldron(block, ingredient);
+				new CauldronWrapper(block, ingredient);
 				return true;
 			}
 		}
@@ -89,7 +89,7 @@ public class BCauldron {
 
 	// fills players bottle with cooked brew
 	public static boolean fill(Player player, Block block) {
-		BCauldron bcauldron = get(block);
+		CauldronWrapper bcauldron = get(block);
 		if (bcauldron != null) {
 			if (!player.hasPermission("brewery.cauldron.fill")) {
 				BreweryPlugin.instance.msg(player, BreweryPlugin.instance.languageReader.get("Perms_NoCauldronFill"));
@@ -149,7 +149,7 @@ public class BCauldron {
 			BreweryPlugin.instance.msg(player, BreweryPlugin.instance.languageReader.get("Error_NoPermissions"));
 			return;
 		}
-		BCauldron bcauldron = get(block);
+		CauldronWrapper bcauldron = get(block);
 		if (bcauldron != null) {
 			if (bcauldron.state > 1) {
 				BreweryPlugin.instance.msg(player, BreweryPlugin.instance.languageReader.get("Player_CauldronInfo1", "" + bcauldron.state));
@@ -162,7 +162,7 @@ public class BCauldron {
 	// reset to normal cauldron
 	public static void remove(Block block) {
 		if (getFillLevel(block) != 0) {
-			BCauldron bcauldron = get(block);
+			CauldronWrapper bcauldron = get(block);
 			if (bcauldron != null) {
 				bcauldrons.remove(bcauldron);
 			}
@@ -172,7 +172,7 @@ public class BCauldron {
 	// unloads cauldrons that are in a unloading world
 	// as they were written to file just before, this is safe to do
 	public static void onUnload(String name) {
-		for (BCauldron bcauldron : bcauldrons) {
+		for (CauldronWrapper bcauldron : bcauldrons) {
 			if (bcauldron.block.getWorld().getName().equals(name)) {
 				bcauldrons.remove(bcauldron);
 			}
@@ -184,7 +184,7 @@ public class BCauldron {
 
 		if (!bcauldrons.isEmpty()) {
 			int id = 0;
-			for (BCauldron cauldron : bcauldrons) {
+			for (CauldronWrapper cauldron : bcauldrons) {
 				String worldName = cauldron.block.getWorld().getName();
 				String prefix;
 

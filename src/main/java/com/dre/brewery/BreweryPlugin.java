@@ -137,7 +137,7 @@ public class BreweryPlugin extends JavaPlugin {
 
 		// delete Data from Ram
 		Barrel.barrels.clear();
-		BCauldron.bcauldrons.clear();
+		CauldronWrapper.bcauldrons.clear();
 		BIngredients.possibleIngredients.clear();
 		BIngredients.recipes.clear();
 		BIngredients.cookedNames.clear();
@@ -505,7 +505,7 @@ public class BreweryPlugin extends JavaPlugin {
 							BIngredients ingredients = loadIngredients(section.getConfigurationSection(cauldron + ".ingredients"));
 							int state = section.getInt(cauldron + ".state", 1);
 
-							new BCauldron(worldBlock, ingredients, state);
+							new CauldronWrapper(worldBlock, ingredients, state);
 						} else {
 							errorLog("Incomplete Block-Data in data.yml: " + section.getCurrentPath() + "." + cauldron);
 						}
@@ -685,7 +685,7 @@ public class BreweryPlugin extends JavaPlugin {
 		switch (block.getType()) {
 		case CAULDRON:
 			// will only remove when existing
-			BCauldron.remove(block);
+			CauldronWrapper.remove(block);
 			return true;
 		case FENCE:
 		case NETHER_FENCE:
@@ -809,7 +809,7 @@ public class BreweryPlugin extends JavaPlugin {
 	public class BreweryRunnable implements Runnable {
 		@Override
 		public void run() {
-			for (BCauldron cauldron : BCauldron.bcauldrons) {
+			for (CauldronWrapper cauldron : CauldronWrapper.bcauldrons) {
 				cauldron.onUpdate();// runs every min to update cooking time
 			}
 			Barrel.onUpdate();// runs every min to check and update ageing time

@@ -36,13 +36,13 @@ public class PlayerListener implements Listener {
 						ItemStack item = event.getItem();
 
 						if (materialInHand == Material.WATCH) {
-							BCauldron.printTime(player, clickedBlock);
+							CauldronWrapper.printTime(player, clickedBlock);
 							return;
 
 							// fill a glass bottle with potion
 						} else if (materialInHand == Material.GLASS_BOTTLE) {
 							if (player.getInventory().firstEmpty() != -1 || item.getAmount() == 1) {
-								if (BCauldron.fill(player, clickedBlock)) {
+								if (CauldronWrapper.fill(player, clickedBlock)) {
 									event.setCancelled(true);
 									if (player.hasPermission("brewery.cauldron.fill")) {
 										if (item.getAmount() > 1) {
@@ -60,9 +60,9 @@ public class PlayerListener implements Listener {
 							// reset cauldron when refilling to prevent
 							// unlimited source of potions
 						} else if (materialInHand == Material.WATER_BUCKET) {
-							if (BCauldron.getFillLevel(clickedBlock) != 0 && BCauldron.getFillLevel(clickedBlock) < 2) {
+							if (CauldronWrapper.getFillLevel(clickedBlock) != 0 && CauldronWrapper.getFillLevel(clickedBlock) < 2) {
 								// will only remove when existing
-								BCauldron.remove(clickedBlock);
+								CauldronWrapper.remove(clickedBlock);
 							}
 							return;
 						}
@@ -75,7 +75,7 @@ public class PlayerListener implements Listener {
 							if (BIngredients.possibleIngredients.contains(materialInHand)) {
 
 								if (player.hasPermission("brewery.cauldron.insert")) {
-									if (BCauldron.ingredientAdd(clickedBlock, item)) {
+									if (CauldronWrapper.ingredientAdd(clickedBlock, item)) {
 										boolean isBucket = item.getType().equals(Material.WATER_BUCKET)
 												|| item.getType().equals(Material.LAVA_BUCKET)
 												|| item.getType().equals(Material.MILK_BUCKET);
@@ -83,7 +83,7 @@ public class PlayerListener implements Listener {
 											item.setAmount(item.getAmount() - 1);
 
 											if (isBucket) {
-												BCauldron.giveItem(player, new ItemStack(Material.BUCKET));
+												CauldronWrapper.giveItem(player, new ItemStack(Material.BUCKET));
 											}
 										} else {
 											if (isBucket) {

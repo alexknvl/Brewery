@@ -1,6 +1,7 @@
 package com.dre.brewery.listeners;
 
 import com.dre.brewery.BreweryPlugin;
+import com.dre.brewery.CauldronWrapper;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -8,7 +9,6 @@ import org.bukkit.event.world.WorldLoadEvent;
 import org.bukkit.event.world.WorldUnloadEvent;
 import org.bukkit.World;
 
-import com.dre.brewery.BCauldron;
 import com.dre.brewery.Barrel;
 import com.dre.brewery.filedata.DataSave;
 
@@ -29,7 +29,7 @@ public class WorldListener implements Listener {
 	public void onWorldUnload(WorldUnloadEvent event) {
 		DataSave.save(true);
 		Barrel.onUnload(event.getWorld().getName());
-		BCauldron.onUnload(event.getWorld().getName());
+		CauldronWrapper.onUnload(event.getWorld().getName());
 	}
 
 }
