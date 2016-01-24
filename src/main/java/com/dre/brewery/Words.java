@@ -104,20 +104,6 @@ public class Words {
 		}
 	}
 
-	// Distort players words when he talks
-	public static void playerChat(AsyncPlayerChatEvent event) {
-		BPlayer bPlayer = BPlayer.get(event.getPlayer());
-		if (bPlayer != null) {
-			if (loadWords()) {
-				String message = event.getMessage();
-				if (log) {
-					BreweryPlugin.instance.log(BreweryPlugin.instance.languageReader.get("Player_TriedToSay", event.getPlayer().getName(), message));
-				}
-				event.setMessage(distortMessage(message, bPlayer.getDrunkeness()));
-			}
-		}
-	}
-
 	// distorts a message, ignoring text enclosed in ignoreText letters
 	public static String distortMessage(String message, int drunkeness) {
 		if (!ignoreText.isEmpty()) {

@@ -213,7 +213,16 @@ public class PlayerListener implements Listener {
 	// player talks while drunk, but he cant speak very well
 	@EventHandler(priority = EventPriority.LOWEST)
 	public void onPlayerChat(AsyncPlayerChatEvent event) {
-		Words.playerChat(event);
+		BPlayer bPlayer = BPlayer.get(event.getPlayer());
+		if (bPlayer != null) {
+			if (Words.loadWords()) {
+				String message = event.getMessage();
+				if (Words.log) {
+					BreweryPlugin.instance.log(BreweryPlugin.instance.languageReader.get("Player_TriedToSay", event.getPlayer().getName(), message));
+				}
+				event.setMessage(Words.distortMessage(message, bPlayer.getDrunkeness()));
+			}
+		}
 	}
 	
 	// player commands while drunk, distort chat commands
