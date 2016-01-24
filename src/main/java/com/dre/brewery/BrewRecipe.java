@@ -229,7 +229,7 @@ public class BrewRecipe {
 
 		Brew brew = new Brew(uid, bIngredients, quality, distillRuns, (float) age, wood, getName(5), false, false, true);
 
-		potion.setDurability(Brew.PotionColor.valueOf(getColor()).getColorId(false));
+		potion.setDurability(PotionColor.valueOf(getColor()).getColorId(false));
 		potionMeta.setDisplayName(BreweryPlugin.instance.color("&f" + getName(quality)));
 		// This effect stores the UID in its Duration
 		potionMeta.addCustomEffect((PotionEffectType.REGENERATION).createEffect((uid * 4), 0), true);
