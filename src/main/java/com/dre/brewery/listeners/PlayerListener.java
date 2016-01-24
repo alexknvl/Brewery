@@ -216,10 +216,10 @@ public class PlayerListener implements Listener {
 		BPlayer bPlayer = BPlayer.get(event.getPlayer());
 		if (bPlayer != null) {
 			String message = event.getMessage();
-			if (Words.log) {
+			if (DrunkTextEffect.log) {
 				BreweryPlugin.instance.log(BreweryPlugin.instance.languageReader.get("Player_TriedToSay", event.getPlayer().getName(), message));
 			}
-			event.setMessage(Words.distortMessage(message, bPlayer.getDrunkeness()));
+			event.setMessage(DrunkTextEffect.distortMessage(message, bPlayer.getDrunkeness()));
 		}
 	}
 	
@@ -228,18 +228,18 @@ public class PlayerListener implements Listener {
 	public void onCommandPreProcess(PlayerCommandPreprocessEvent event) {
 		BPlayer bPlayer = BPlayer.get(event.getPlayer());
 		if (bPlayer != null) {
-			if (!Words.commands.isEmpty()) {
+			if (!DrunkTextEffect.commands.isEmpty()) {
 				String name = event.getPlayer().getName();
 				String chat = event.getMessage();
-				for (String command : Words.commands) {
+				for (String command : DrunkTextEffect.commands) {
 					if (command.length() + 1 < chat.length()) {
 						if (Character.isSpaceChar(chat.charAt(command.length()))) {
 							if (chat.toLowerCase().startsWith(command.toLowerCase())) {
-								if (Words.log) {
+								if (DrunkTextEffect.log) {
 									BreweryPlugin.instance.log(BreweryPlugin.instance.languageReader.get("Player_TriedToSay", name, chat));
 								}
 								String message = chat.substring(command.length() + 1);
-								message = Words.distortMessage(message, bPlayer.getDrunkeness());
+								message = DrunkTextEffect.distortMessage(message, bPlayer.getDrunkeness());
 
 								event.setMessage(chat.substring(0, command.length() + 1) + message);
 								return;

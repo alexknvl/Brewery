@@ -141,7 +141,7 @@ public class BreweryPlugin extends JavaPlugin {
 		BPlayer.clear();
 		Brew.potions.clear();
 		Wakeup.wakeups.clear();
-		Words.words.clear();
+		DrunkTextEffect.words.clear();
 
 		this.log(this.getDescription().getName() + " disabled!");
 	}
@@ -158,7 +158,7 @@ public class BreweryPlugin extends JavaPlugin {
 		BIngredients.possibleIngredients.clear();
 		BIngredients.recipes.clear();
 		BIngredients.cookedNames.clear();
-		Words.words.clear();
+		DrunkTextEffect.words.clear();
 		BPlayer.drainItems.clear();
 		if (useLB) {
 			try {
@@ -278,11 +278,11 @@ public class BreweryPlugin extends JavaPlugin {
 		Brew.colorInBarrels = config.getBoolean("colorInBarrels", false);
 		Brew.colorInBrewer = config.getBoolean("colorInBrewer", false);
 		PlayerListener.openEverywhere = config.getBoolean("openLargeBarrelEverywhere", false);
-		Words.log = config.getBoolean("logRealChat", false);
-		Words.commands = config.getStringList("distortCommands");
-		Words.doSigns = config.getBoolean("distortSignText", false);
+		DrunkTextEffect.log = config.getBoolean("logRealChat", false);
+		DrunkTextEffect.commands = config.getStringList("distortCommands");
+		DrunkTextEffect.doSigns = config.getBoolean("distortSignText", false);
 		for (String bypass : config.getStringList("distortBypass")) {
-			Words.ignoreText.add(bypass.split(","));
+			DrunkTextEffect.ignoreText.add(bypass.split(","));
 		}
 
 		// loading recipes
@@ -349,8 +349,8 @@ public class BreweryPlugin extends JavaPlugin {
 			}
 		}
 
-		// telling Words the path, it will load it when needed
-		Words.loadWords(config);
+		// telling DrunkTextEffect the path, it will load it when needed
+		DrunkTextEffect.loadWords(config);
 
 		return true;
 	}

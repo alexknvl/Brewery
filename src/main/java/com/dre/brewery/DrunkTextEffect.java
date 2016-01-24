@@ -2,16 +2,15 @@ package com.dre.brewery;
 
 import java.util.List;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Map;
 
 import org.bukkit.configuration.file.FileConfiguration;
 
-public class Words {
+public class DrunkTextEffect {
 
 	// represends Words and letters, that are replaced in drunk players messages
 
-	public static ArrayList<Words> words = new ArrayList<Words>();
+	public static ArrayList<DrunkTextEffect> words = new ArrayList<DrunkTextEffect>();
 	public static List<String> commands;
 	public static List<String[]> ignoreText = new ArrayList<String[]>();
 	public static Boolean doSigns;
@@ -24,7 +23,7 @@ public class Words {
 	private int alcohol = 1;
 	private int percentage = 100;
 
-	public Words(Map<?, ?> part) {
+	public DrunkTextEffect(Map<?, ?> part) {
 		for (Map.Entry<?, ?> wordPart : part.entrySet()) {
 			String key = (String) wordPart.getKey();
 
@@ -65,7 +64,7 @@ public class Words {
 			// load when first drunk player talks
 			if (config != null) {
                 for (Map<?, ?> map : config.getMapList("words")) {
-                    new Words(map);
+                    new DrunkTextEffect(map);
                 }
             }
 		}
@@ -108,7 +107,7 @@ public class Words {
 	// distorts a message without checking ignoreText letters
 	private static String distortString(String message, int drunkeness) {
 		if (message.length() > 1) {
-			for (Words word : words) {
+			for (DrunkTextEffect word : words) {
 				if (word.alcohol <= drunkeness) {
 					message = word.distort(message);
 				}
