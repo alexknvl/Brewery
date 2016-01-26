@@ -29,19 +29,19 @@ public class Brew {
 	// static potions should not be changed
 	public boolean immutable;
 
-	public Brew(int uid, BIngredients ingredients) {
+	public Brew(BIngredients ingredients) {
 		this.ingredients = ingredients;
 	}
 
 	// quality already set
-	public Brew(int uid, int quality, BrewRecipe recipe, BIngredients ingredients) {
+	public Brew(int quality, BrewRecipe recipe, BIngredients ingredients) {
 		this.ingredients = ingredients;
 		this.quality = quality;
 		this.currentRecipe = recipe;
 	}
 
 	// loading from file
-	public Brew(int uid, BIngredients ingredients, int quality, int distillRuns, float ageTime, float wood,
+	public Brew(BIngredients ingredients, int quality, int distillRuns, float ageTime, float wood,
 				String recipe, boolean unlabeled, boolean persistent, boolean immutable) {
 		this.ingredients = ingredients;
 		this.quality = quality;
@@ -159,7 +159,7 @@ public class Brew {
 
 	// Clones this instance with a new unique ID
 	public Brew clone(int uid) {
-		Brew brew = new Brew(uid, quality, currentRecipe, ingredients);
+		Brew brew = new Brew(quality, currentRecipe, ingredients);
 		Brew.potions.put(uid, brew);
 		brew.distillRuns = distillRuns;
 		brew.ageTime = ageTime;

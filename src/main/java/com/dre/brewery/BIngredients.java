@@ -75,7 +75,7 @@ public class BIngredients {
 			// Potion is best with cooking only
 			int quality = (int) Math.round((getIngredientQuality(cookRecipe) + getCookingQuality(cookRecipe, false)) / 2.0);
 			BreweryPlugin.instance.debugLog("cooked potion has Quality: " + quality);
-			Brew brew = new Brew(uid, quality, cookRecipe, this);
+			Brew brew = new Brew(quality, cookRecipe, this);
 			Brew.potions.put(uid, brew);
 			Lore.addOrReplaceEffects(potionMeta, brew.getEffects(), brew.getQuality());
 
@@ -84,7 +84,7 @@ public class BIngredients {
 
 		} else {
 			// new base potion
-			Brew.potions.put(uid, new Brew(uid, this));
+			Brew.potions.put(uid, new Brew(this));
 
 			if (state <= 1) {
 				cookedName = BreweryPlugin.instance.languageReader.get("Brew_ThickBrew");
