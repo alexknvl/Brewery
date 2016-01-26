@@ -2,6 +2,7 @@ package com.dre.brewery;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import com.google.common.collect.ImmutableList;
 import org.bukkit.configuration.ConfigurationSection;
@@ -40,7 +41,8 @@ public class BrewRecipe {
 		this.effects = effects;
 	}
 
-	public static BrewRecipe read(ConfigurationSection configSectionRecipes, String recipeId) {
+	public static BrewRecipe read(ConfigurationSection configSectionRecipes, String recipeId,
+								  Set<Material> possibleIngredients) {
 		String nameList = configSectionRecipes.getString(recipeId + ".name");
 		final ImmutableList<String> names;
 		if (nameList != null) {
@@ -92,7 +94,7 @@ public class BrewRecipe {
 					if (mat != null) {
 						ItemStack stack = new ItemStack(mat, BreweryPlugin.instance.parseInt(ingredParts[1]), durability);
 						ingredients.add(stack);
-						BreweryPlugin.possibleIngredients.add(mat);
+						possibleIngredients.add(mat);
 					} else {
 						BreweryPlugin.instance.errorLog("Unknown Material: " + ingredParts[0]);
 						return null;

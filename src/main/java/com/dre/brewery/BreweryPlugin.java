@@ -297,9 +297,10 @@ public class BreweryPlugin extends JavaPlugin {
 		// loading recipes
 		ConfigurationSection configSection = config.getConfigurationSection("recipes");
 		ArrayList<BrewRecipe> recipes = new ArrayList<>();
+		HashSet<Material> possibleIngredients = new HashSet<>();
 		if (configSection != null) {
 			for (String recipeId : configSection.getKeys(false)) {
-				BrewRecipe recipe = BrewRecipe.read(configSection, recipeId);
+				BrewRecipe recipe = BrewRecipe.read(configSection, recipeId, possibleIngredients);
 				if (recipe != null && recipe.isValid()) {
 					recipes.add(recipe);
 				} else {
@@ -312,7 +313,6 @@ public class BreweryPlugin extends JavaPlugin {
 		// loading cooked names and possible ingredients
 		configSection = config.getConfigurationSection("cooked");
 		HashMap<Material, String> cookedNames = new HashMap<>();
-		HashSet<Material> possibleIngredients = new HashSet<>();
 		if (configSection != null) {
 			for (String ingredient : configSection.getKeys(false)) {
 				Material mat = Material.matchMaterial(ingredient);
