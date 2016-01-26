@@ -6,6 +6,10 @@ version := "1.3.2"
 
 javacOptions ++= Seq("-Xlint:deprecation")
 
+javacOptions ++= Seq("-source", "1.7", "-target", "1.7")
+
+scalacOptions += "-target:jvm-1.7"
+
 libraryDependencies ++= Seq(
   "org.bukkit" % "bukkit" % "1.8.8-R0.1-SNAPSHOT",
   "org.spigotmc" % "spigot-api" % "1.8.8-R0.1-SNAPSHOT",
