@@ -2,7 +2,6 @@ package com.dre.brewery;
 
 import java.util.Map;
 import java.util.HashMap;
-import java.util.List;
 
 import com.google.common.collect.ImmutableList;
 import org.bukkit.Material;
@@ -24,9 +23,11 @@ public class Brew {
 	public float ageTime;
 	public float wood;
 	public BrewRecipe currentRecipe;
+
 	public boolean unlabeled;
 	public boolean persistent;
-	public boolean stat; // static potions should not be changed
+	// static potions should not be changed
+	public boolean immutable;
 
 	public Brew(int uid, BIngredients ingredients) {
 		this.ingredients = ingredients;
@@ -42,7 +43,7 @@ public class Brew {
 	}
 
 	// loading from file
-	public Brew(int uid, BIngredients ingredients, int quality, int distillRuns, float ageTime, float wood, String recipe, boolean unlabeled, boolean persistent, boolean stat) {
+	public Brew(int uid, BIngredients ingredients, int quality, int distillRuns, float ageTime, float wood, String recipe, boolean unlabeled, boolean persistent, boolean immutable) {
 		potions.put(uid, this);
 		this.ingredients = ingredients;
 		this.quality = quality;
@@ -51,7 +52,7 @@ public class Brew {
 		this.wood = wood;
 		this.unlabeled = unlabeled;
 		this.persistent = persistent;
-		this.stat = stat;
+		this.immutable = immutable;
 		setRecipeFromString(recipe);
 	}
 
@@ -127,7 +128,7 @@ public class Brew {
 			if (quality > 0) {
 				currentRecipe = ingredients.getBestRecipe(wood, ageTime, distillRuns > 0);
 				if (currentRecipe != null) {
-					if (!stat) {
+					if (!immutable) {
 						this.quality = calcQuality();
 					}
 					BreweryPlugin.instance.log("Brew was made from Recipe: '" + name + "' which could not be found. '" + currentRecipe.getName(5) + "' used instead!");
@@ -165,7 +166,7 @@ public class Brew {
 		brew.ageTime = ageTime;
 		brew.unlabeled = unlabeled;
 		if (!brew.persistent) {
-			brew.stat = stat;
+			brew.immutable = immutable;
 		}
 		return brew;
 	}
@@ -287,12 +288,12 @@ public class Brew {
 	}
 
 	public boolean isStatic() {
-		return stat;
+		return immutable;
 	}
 
 	// Set the Static flag, so potion is unchangeable
 	public void setStatic(boolean stat, ItemStack potion) {
-		this.stat = stat;
+		this.immutable = stat;
 		if (currentRecipe != null && canDistill()) {
 			if (stat) {
 				potion.setDurability(PotionColor.valueOf(currentRecipe.getColor()).getColorId(false));
@@ -306,7 +307,7 @@ public class Brew {
 
 	// distill custom potion in given slot
 	public void distillSlot(ItemStack slotItem, PotionMeta potionMeta) {
-		if (stat) {
+		if (immutable) {
 			return;
 		}
 
@@ -345,7 +346,7 @@ public class Brew {
 	// Ageing Section ------------------
 
 	public void age(ItemStack item, float time, byte woodType) {
-		if (stat) {
+		if (immutable) {
 			return;
 		}
 
@@ -448,7 +449,7 @@ public class Brew {
 			if (brew.persistent) {
 				idConfig.set("persist", true);
 			}
-			if (brew.stat) {
+			if (brew.immutable) {
 				idConfig.set("stat", true);
 			}
 			// save the ingredients
