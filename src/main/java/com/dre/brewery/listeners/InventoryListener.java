@@ -114,7 +114,7 @@ public class InventoryListener implements Listener {
 					Brew brew = Brew.get(meta);
 					if (brew != null) {
 						if (Brew.hasColorLore(meta)) {
-							brew.convertLore(meta, false);
+							Brew.convertLore(brew, meta, false);
 							item.setItemMeta(meta);
 						}
 					}

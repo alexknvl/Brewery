@@ -234,7 +234,7 @@ public class BrewRecipe {
 		// This effect stores the UID in its Duration
 		potionMeta.addCustomEffect((PotionEffectType.REGENERATION).createEffect((uid * 4), 0), true);
 
-		brew.convertLore(potionMeta, false);
+		Brew.convertLore(brew, potionMeta, false);
 		Brew.addOrReplaceEffects(potionMeta, effects, quality);
 
 		potion.setItemMeta(potionMeta);
