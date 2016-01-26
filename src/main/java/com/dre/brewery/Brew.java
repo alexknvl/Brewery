@@ -221,7 +221,7 @@ public class Brew {
 	}
 
 	// calculating quality
-	public int calcQuality() {
+	private int calcQuality() {
 		// calculate quality from all of the factors
 		float quality = ingredients.getIngredientQuality(currentRecipe) + ingredients.getCookingQuality(currentRecipe, distillRuns > 0);
 		if (currentRecipe.needsToAge() || ageTime > 0.5) {
