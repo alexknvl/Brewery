@@ -421,7 +421,9 @@ public class BreweryPlugin extends JavaPlugin {
 					boolean persistent = section.getBoolean(uid + ".persist", false);
 					boolean stat = section.getBoolean(uid + ".stat", false);
 
-					new Brew(parseInt(uid), ingredients, quality, distillRuns, ageTime, wood, recipe, unlabeled, persistent, stat);
+					int uidValue = parseInt(uid);
+					Brew brew = new Brew(uidValue, ingredients, quality, distillRuns, ageTime, wood, recipe, unlabeled, persistent, stat);
+					Brew.potions.put(uidValue, brew);
 				}
 			}
 

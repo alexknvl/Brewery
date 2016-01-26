@@ -228,6 +228,7 @@ public class BrewRecipe {
 		BIngredients bIngredients = new BIngredients(list, cookingTime);
 
 		Brew brew = new Brew(uid, bIngredients, quality, distillRuns, (float) age, wood, getName(5), false, false, true);
+		Brew.potions.put(uid, brew);
 
 		potion.setDurability(PotionColor.valueOf(getColor()).getColorId(false));
 		potionMeta.setDisplayName(BreweryPlugin.instance.color("&f" + getName(quality)));

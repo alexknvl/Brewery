@@ -31,7 +31,6 @@ public class Brew {
 
 	public Brew(int uid, BIngredients ingredients) {
 		this.ingredients = ingredients;
-		potions.put(uid, this);
 	}
 
 	// quality already set
@@ -39,12 +38,11 @@ public class Brew {
 		this.ingredients = ingredients;
 		this.quality = quality;
 		this.currentRecipe = recipe;
-		potions.put(uid, this);
 	}
 
 	// loading from file
-	public Brew(int uid, BIngredients ingredients, int quality, int distillRuns, float ageTime, float wood, String recipe, boolean unlabeled, boolean persistent, boolean immutable) {
-		potions.put(uid, this);
+	public Brew(int uid, BIngredients ingredients, int quality, int distillRuns, float ageTime, float wood,
+				String recipe, boolean unlabeled, boolean persistent, boolean immutable) {
 		this.ingredients = ingredients;
 		this.quality = quality;
 		this.distillRuns = distillRuns;
@@ -162,6 +160,7 @@ public class Brew {
 	// Clones this instance with a new unique ID
 	public Brew clone(int uid) {
 		Brew brew = new Brew(uid, quality, currentRecipe, ingredients);
+		Brew.potions.put(uid, brew);
 		brew.distillRuns = distillRuns;
 		brew.ageTime = ageTime;
 		brew.unlabeled = unlabeled;
