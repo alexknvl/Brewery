@@ -76,7 +76,7 @@ public class BIngredients {
 			int quality = (int) Math.round((getIngredientQuality(cookRecipe) + getCookingQuality(cookRecipe, false)) / 2.0);
 			BreweryPlugin.instance.debugLog("cooked potion has Quality: " + quality);
 			Brew brew = new Brew(uid, quality, cookRecipe, this);
-			Brew.addOrReplaceEffects(potionMeta, brew.getEffects(), brew.getQuality());
+			Lore.addOrReplaceEffects(potionMeta, brew.getEffects(), brew.getQuality());
 
 			cookedName = cookRecipe.getName(quality);
 			potion.setDurability(PotionColor.valueOf(cookRecipe.getColor()).getColorId(false));

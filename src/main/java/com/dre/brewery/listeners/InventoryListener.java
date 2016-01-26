@@ -1,7 +1,6 @@
 package com.dre.brewery.listeners;
 
-import com.dre.brewery.BreweryPlugin;
-import com.dre.brewery.PotionColor;
+import com.dre.brewery.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -15,8 +14,6 @@ import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.Material;
 
-import com.dre.brewery.Barrel;
-import com.dre.brewery.Brew;
 import com.dre.brewery.integration.LogBlockBarrel;
 
 public class InventoryListener implements Listener {
@@ -113,8 +110,8 @@ public class InventoryListener implements Listener {
 					PotionMeta meta = (PotionMeta) item.getItemMeta();
 					Brew brew = Brew.get(meta);
 					if (brew != null) {
-						if (Brew.hasColorLore(meta)) {
-							Brew.convertLore(brew, meta, false);
+						if (Lore.hasColorLore(meta)) {
+							Lore.convertLore(brew, meta, false);
 							item.setItemMeta(meta);
 						}
 					}
