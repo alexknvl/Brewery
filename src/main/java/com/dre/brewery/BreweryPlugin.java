@@ -36,7 +36,7 @@ import com.dre.brewery.integration.LogBlockBarrel;
 
 public class BreweryPlugin extends JavaPlugin {
 	public static BreweryPlugin instance;
-	public static String configVersion = "1.3.1";
+	public static String configVersion = "1.4";
 	public static boolean debug;
 	public static boolean useUUID;
 	public static boolean updateCheck;
