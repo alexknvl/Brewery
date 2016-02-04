@@ -1,5 +1,5 @@
 name: Brewery
-version: 1.4
+version: 1.4.0
 main: com.dre.brewery.BreweryPlugin
 authors: [Milan Albrecht, Frank Baumann]
 softdepend: [LWC, LogBlock, WorldGuard, GriefPrevention, Vault]

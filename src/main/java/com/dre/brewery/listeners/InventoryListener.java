@@ -68,7 +68,6 @@ public class InventoryListener implements Listener {
 	@EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
 	public void onBrew(BrewEvent event) {
 		BrewerInventory brewerContents = event.getContents();
-		Material.FERME
 
 		// Check if there are any custom potions.
 		boolean customBrewing = false;
