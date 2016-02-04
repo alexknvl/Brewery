@@ -68,6 +68,7 @@ public class InventoryListener implements Listener {
 	@EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
 	public void onBrew(BrewEvent event) {
 		BrewerInventory brewerContents = event.getContents();
+		Material.FERME
 
 		// Check if there are any custom potions.
 		boolean customBrewing = false;
@@ -81,8 +82,13 @@ public class InventoryListener implements Listener {
 			Material ingredient = brewerContents.getIngredient().getType();
 
 			if (ingredient == Material.SULPHUR) {
-				if (addGunpowder(brewerContents))
-					brewerContents.setIngredient(null);
+				if (addGunpowder(brewerContents)) {
+					if (brewerContents.getIngredient().getAmount() == 1) {
+						brewerContents.setIngredient(null);
+					} else {
+						brewerContents.getIngredient().setAmount(brewerContents.getIngredient().getAmount() - 1);
+					}
+				}
 			} else if (ingredient == Material.GLOWSTONE_DUST) {
 				distill(brewerContents);
 			}
